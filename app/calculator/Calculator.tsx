@@ -4,6 +4,7 @@ import { useState } from "react"
 import Button from "./components/Button"
 import OperatorButton from "./components/OperatorButton"
 import NumberButton from "./components/NumberButton"
+import ClearButton from "./components/ClearButton"
 import { useDisplay } from "./context/DisplayContext"
 
 export default function Calculator() {
@@ -13,13 +14,13 @@ export default function Calculator() {
 		<div className="flex flex-col gap-2">
 			<p
 				data-testid="calculationDisplay"
-				className="text-md text-gray-500 h-10"
+				className="text-md text-gray-500 h-10 text-right"
 			>
 				{calculationDisplayStack}
 			</p>
 			<p
 				data-testid="mainDisplay"
-				className="text-2xl h-10"
+				className="text-2xl h-10 text-right"
 			>
 				{mainDisplayStack}
 			</p>
@@ -28,9 +29,9 @@ export default function Calculator() {
 				className="grid grid-cols-4 gap-1"
 			>
 				<Button>%</Button>
-				<Button>CE</Button>
-				<Button>C</Button>
-				<Button>←</Button>
+				<ClearButton type="clearEntry" />
+				<ClearButton type="clear" />
+				<ClearButton type="backspace" />
 				<Button>1/x</Button>
 				<Button>x^2</Button>
 				<Button>2√x</Button>

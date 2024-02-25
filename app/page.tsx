@@ -1,13 +1,13 @@
 "use client"
 import Calculator from "./calculator/Calculator"
-import DisplayContextWrapper from "./calculator/context/DisplayContext"
+import DisplayProvider from "./calculator/context/DisplayContext"
 
 export default function Home() {
 	return (
 		<div className="w-screen h-screen flex">
-			<DisplayContextWrapper>
+			<DisplayProvider>
 				<Calculator />
-			</DisplayContextWrapper>
+			</DisplayProvider>
 		</div>
 	)
 }

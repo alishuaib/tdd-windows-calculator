@@ -3,7 +3,6 @@ import { render, screen } from "@testing-library/react"
 import Calculator from "@/app/calculator/Calculator"
 import DisplayContext from "@/app/calculator/context/DisplayContext"
 import { act } from "react-dom/test-utils"
-import exp from "constants"
 
 describe("Calculator Widget", () => {
 	beforeEach(() => {
@@ -30,7 +29,7 @@ describe("Calculator Widget", () => {
 			})
 
 			// Check if the display value contains the concatenated numbers
-			expect(mainDisplay.textContent).toContain("1234567890")
+			expect(mainDisplay.textContent).toBe("1234567890")
 		})
 
 		it("number buttons should not insert a leading zero to the display", () => {
@@ -41,7 +40,39 @@ describe("Calculator Widget", () => {
 				zeroButton.click()
 			})
 
-			expect(mainDisplay.textContent).toContain("0")
+			expect(mainDisplay.textContent).toBe("0")
+		})
+
+		it("If the last button pressed was an operator, replace the display with the new number", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const addButton = screen.getByRole("button", { name: "+" })
+				addButton.click()
+			})
+
+			act(() => {
+				const numberButtonTwo = screen.getByRole("button", {
+					name: "2",
+				})
+				numberButtonTwo.click()
+			})
+
+			act(() => {
+				const numberButtonThree = screen.getByRole("button", {
+					name: "3",
+				})
+				numberButtonThree.click()
+			})
+
+			expect(mainDisplay.textContent).toBe("23")
 		})
 	})
 
@@ -51,11 +82,105 @@ describe("Calculator Widget", () => {
 
 	// 	const zeroButton = screen.getByRole("button", { name: "0" })
 	// 	zeroButton.click()
-	// 	expect(mainDisplay.textContent).toContain("0")
+	// 	expect(mainDisplay.textContent).toBe("0")
 	// })
 
 	describe("Operator button tests [+,-,×,÷]", () => {
 		it("Add button should move display to calculation display and insert +", () => {
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const addButton = screen.getByRole("button", { name: "+" })
+				addButton.click()
+			})
+
+			expect(calculationDisplay.textContent).toBe("1+")
+		})
+		it("Subtract button should move display to calculation display and insert -", () => {
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const subtractButton = screen.getByRole("button", { name: "-" })
+				subtractButton.click()
+			})
+
+			expect(calculationDisplay.textContent).toBe("1-")
+		})
+		it("Multiply button should move display to calculation display and insert ×", () => {
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const multiplyButton = screen.getByRole("button", { name: "×" })
+				multiplyButton.click()
+			})
+
+			expect(calculationDisplay.textContent).toBe("1×")
+		})
+		it("Divide button should move display to calculation display and insert ÷", () => {
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const divideButton = screen.getByRole("button", { name: "÷" })
+				divideButton.click()
+			})
+
+			expect(calculationDisplay.textContent).toBe("1÷")
+		})
+		it("Multiple numbers should move from display to calculation display and insert operator", () => {
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+			const mainDisplay = screen.getByTestId("mainDisplay")
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const numberButtonTwo = screen.getByRole("button", {
+					name: "2",
+				})
+				numberButtonTwo.click()
+			})
+
+			act(() => {
+				const addButton = screen.getByRole("button", { name: "+" })
+				addButton.click()
+			})
+
+			expect(calculationDisplay.textContent).toBe("12+")
+			expect(mainDisplay.textContent).toBe("12")
+		})
+		it("Operator button should replace the last operator if one exists in calculation display", () => {
 			const mainDisplay = screen.getByTestId("mainDisplay")
 			const calculationDisplay = screen.getByTestId("calculationDisplay")
 
@@ -71,29 +196,32 @@ describe("Calculator Widget", () => {
 				addButton.click()
 			})
 
-			expect(calculationDisplay.textContent).toContain("1+")
-			expect(mainDisplay.textContent).toContain("1")
-		})
-		it("Subtract button should move display to calculation display and insert -", () => {
-			const mainDisplay = screen.getByTestId("mainDisplay")
-			const calculationDisplay = screen.getByTestId("calculationDisplay")
-
-			act(() => {
-				const numberButtonOne = screen.getByRole("button", {
-					name: "1",
-				})
-				numberButtonOne.click()
-			})
-
 			act(() => {
 				const subtractButton = screen.getByRole("button", { name: "-" })
 				subtractButton.click()
 			})
 
-			expect(calculationDisplay.textContent).toContain("1-")
-			expect(mainDisplay.textContent).toContain("1")
+			expect(calculationDisplay.textContent).toBe("1-")
+			expect(mainDisplay.textContent).toBe("1")
 		})
-		it("Multiply button should move display to calculation display and insert ×", () => {
+		it("Operator button should keep last number in display after moving to calculation display", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const addButton = screen.getByRole("button", { name: "+" })
+				addButton.click()
+			})
+
+			expect(mainDisplay.textContent).toBe("1")
+		})
+		it("Operator button after inputting a second number should calculate the expression and display the result", () => {
 			const mainDisplay = screen.getByTestId("mainDisplay")
 			const calculationDisplay = screen.getByTestId("calculationDisplay")
 
@@ -105,62 +233,111 @@ describe("Calculator Widget", () => {
 			})
 
 			act(() => {
-				const multiplyButton = screen.getByRole("button", { name: "×" })
-				multiplyButton.click()
+				const addButton = screen.getByRole("button", { name: "+" })
+				addButton.click()
 			})
 
-			expect(calculationDisplay.textContent).toContain("1×")
-			expect(mainDisplay.textContent).toContain("1")
-		})
-		it("Divide button should move display to calculation display and insert ÷", () => {
-			const mainDisplay = screen.getByTestId("mainDisplay")
-			const calculationDisplay = screen.getByTestId("calculationDisplay")
-
 			act(() => {
-				const numberButtonOne = screen.getByRole("button", {
-					name: "1",
+				const numberButtonTwo = screen.getByRole("button", {
+					name: "2",
 				})
-				numberButtonOne.click()
+				numberButtonTwo.click()
 			})
 
 			act(() => {
-				const divideButton = screen.getByRole("button", { name: "÷" })
-				divideButton.click()
+				const addButton = screen.getByRole("button", { name: "+" })
+				addButton.click()
 			})
 
-			expect(calculationDisplay.textContent).toContain("1÷")
-			expect(mainDisplay.textContent).toContain("1")
+			expect(mainDisplay.textContent).toBe("3")
+			expect(calculationDisplay.textContent).toBe("3+")
 		})
-		it.todo(
-			"Operator button should replace the last operator if one exists in calculation display"
-		)
-		it.todo(
-			"Operator button should keep last number in display after moving to calculation display"
-		)
-		it.todo(
-			"Operator button after inputting a second number should calculate the expression and display the result"
-		)
 	})
 
 	describe("Clearing button tests [CE,C,←]", () => {
 		// Clear button tests (C)
 
-		it.todo(
-			"clear (C) button should clear calculation display and display (set to 0)"
-		)
+		it("clear (C) button should clear calculation display and display (set to 0)", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const addButton = screen.getByRole("button", { name: "+" })
+				addButton.click()
+			})
+
+			act(() => {
+				const clearButton = screen.getByRole("button", { name: "C" })
+				clearButton.click()
+			})
+
+			expect(mainDisplay.textContent).toBe("0")
+			expect(calculationDisplay.textContent).toBe("")
+		})
 
 		// Clear entry button tests (CE)
 
-		it.todo("clear entry (CE) button should clear the display (set to 0)")
+		it("clear entry (CE) button should clear the display (set to 0) without changing calculation display", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
 
-		it.todo(
-			"clear entry (CE) button should clear the display (set to 0) without clearing calculation display"
-		)
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const addButton = screen.getByRole("button", { name: "+" })
+				addButton.click()
+			})
+
+			act(() => {
+				const clearEntryButton = screen.getByRole("button", {
+					name: "CE",
+				})
+				clearEntryButton.click()
+			})
+
+			expect(mainDisplay.textContent).toBe("0")
+			expect(calculationDisplay.textContent).toBe("1+")
+		})
 
 		// Backspace button tests (←)
-		it.todo(
-			"backspace (←) button should remove the last character from the display"
-		)
+		it("backspace (←) button should remove the last character from the display", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const numberButtonTwo = screen.getByRole("button", {
+					name: "2",
+				})
+				numberButtonTwo.click()
+			})
+
+			act(() => {
+				const backspaceButton = screen.getByRole("button", {
+					name: "←",
+				})
+				backspaceButton.click()
+			})
+
+			expect(mainDisplay.textContent).toBe("1")
+		})
 	})
 
 	describe("Equals button tests [=]", () => {
