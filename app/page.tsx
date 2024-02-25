@@ -1,4 +1,4 @@
-import Calculator from "./widget/calculator/Calculator"
+import Calculator from "./calculator/Calculator"
 
 export default function Home() {
 	return (

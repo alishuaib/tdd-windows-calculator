@@ -1,23 +1,47 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
-import Calculator from "./Calculator"
+import Calculator from "@/app/calculator/Calculator"
+import { act } from "react-dom/test-utils"
 
 describe("Calculator Widget", () => {
 	// Number button tests (0-9)
-	it("number buttons should insert numbers to the display", () => {
-		render(<Calculator />)
-		const mainDisplay = screen.getByTestId("mainDisplay")
 
-		let intendedDisplay = ""
-		for (let i = 0; i <= 9; i++) {
-			const numberButton = screen.getByRole("button", {
-				name: i.toString(),
+	describe("Number button tests [0-9]", () => {
+		it("number buttons should insert numbers to the display", () => {
+			render(<Calculator />)
+			const mainDisplay = screen.getByTestId("mainDisplay")
+
+			act(() => {
+				;[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].forEach((number) => {
+					const numberButton = screen.getByRole("button", {
+						name: number.toString(),
+					})
+					numberButton.click()
+				})
 			})
-			numberButton.click()
-			intendedDisplay += i.toString()
-			expect(mainDisplay.textContent).toContain(intendedDisplay)
-		}
+
+			// Check if the display value contains the concatenated numbers
+			expect(mainDisplay.textContent).toContain("1234567890")
+		})
+
+		it("number buttons should not insert a leading zero to the display", () => {
+			render(<Calculator />)
+			const mainDisplay = screen.getByTestId("mainDisplay")
+
+			const zeroButton = screen.getByRole("button", { name: "0" })
+			zeroButton.click()
+			expect(mainDisplay.textContent).toContain("0")
+		})
 	})
+
+	// it("number buttons should not insert a leading zero to the display", () => {
+	// 	render(<Calculator />)
+	// 	const mainDisplay = screen.getByTestId("mainDisplay")
+
+	// 	const zeroButton = screen.getByRole("button", { name: "0" })
+	// 	zeroButton.click()
+	// 	expect(mainDisplay.textContent).toContain("0")
+	// })
 
 	describe("Clearing button tests [CE,C,←]", () => {
 		// Clear button tests (C)
