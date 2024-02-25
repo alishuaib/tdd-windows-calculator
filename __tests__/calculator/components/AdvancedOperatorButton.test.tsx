@@ -191,20 +191,50 @@ describe("Operator button tests [+,-,×,÷]", () => {
 	})
 
 	describe("Square root button tests [√]", () => {
-		it.todo(
-			"Square root button should take the number in the display and calculate the square root of the number then display the result"
-		)
-		it.todo(
-			"Square root button should display the number in the display as a square root in the calculation display ( i.e √(36) )"
-		)
+		it("Square root button should take the number in the display and calculate the square root of the number then display the result", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+			act(() => {
+				const numberButtonThree = screen.getByRole("button", {
+					name: "3",
+				})
+				const numberButtonSix = screen.getByRole("button", {
+					name: "6",
+				})
+				numberButtonThree.click()
+				numberButtonSix.click()
+			})
+
+			act(() => {
+				const squareRootButton = screen.getByRole("button", {
+					name: "²√x",
+				})
+				squareRootButton.click()
+			})
+			expect(mainDisplay.textContent).toBe("6")
+			expect(calculationDisplay.textContent).toBe("²√(36)")
+		})
 	})
 
 	describe("Square button tests [x^2]", () => {
-		it.todo(
-			"Square button should take the number in the display and calculate the number squared then display the result"
-		)
-		it.todo(
-			"Square button should display the number in the display with the prefix 'sqr' in the calculation display ( i.e sqr(10) )"
-		)
+		it("Square button should take the number in the display and calculate the number squared then display the result", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+			act(() => {
+				const numberButtonTwo = screen.getByRole("button", {
+					name: "2",
+				})
+				numberButtonTwo.click()
+			})
+
+			act(() => {
+				const squareButton = screen.getByRole("button", {
+					name: "x²",
+				})
+				squareButton.click()
+			})
+			expect(mainDisplay.textContent).toBe("4")
+			expect(calculationDisplay.textContent).toBe("(2)²")
+		})
 	})
 })
