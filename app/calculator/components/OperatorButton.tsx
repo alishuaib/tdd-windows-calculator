@@ -5,7 +5,14 @@ import { useDisplay } from "../context/DisplayContext"
 import { processExpression } from "./EqualButton"
 
 export default function OperatorButton(props: {
-	operator: "add" | "subtract" | "multiply" | "divide"
+	operator:
+		| "add"
+		| "subtract"
+		| "multiply"
+		| "divide"
+		| "reciprocal"
+		| "squareroot"
+		| "square"
 }) {
 	const {
 		mainDisplayStack,
@@ -17,12 +24,17 @@ export default function OperatorButton(props: {
 		isCalculationError,
 		isCalculated,
 		setIsCalculationError,
+		setIsCalculated,
 	} = useDisplay()!
+
 	const operatorSymbolMap = {
 		add: "+",
 		subtract: "-",
 		multiply: "×",
 		divide: "÷",
+		reciprocal: "1/x",
+		squareroot: "²√x",
+		square: "x²",
 	}
 
 	function handleOperatorButtonClick(
@@ -30,7 +42,32 @@ export default function OperatorButton(props: {
 	) {
 		const value = (event.target as HTMLButtonElement).textContent as string
 
-		if (lastUsedOperator) {
+		if (
+			calculationDisplayStack.length > 0 &&
+			calculationDisplayStack[
+				calculationDisplayStack.length - 1
+			].includes("$")
+		) {
+			if (calculationDisplayStack.length > 2) {
+				let answer: string
+				try {
+					answer = processExpression([
+						...calculationDisplayStack,
+						mainDisplayStack.join(""),
+					])
+				} catch (error) {
+					answer = "Error"
+					setIsCalculationError(true)
+				}
+				setMainDisplayStack(() => [answer])
+				setCalculationStack(() => [answer, value])
+			} else {
+				setCalculationStack(() => {
+					return [...calculationDisplayStack, value]
+				})
+			}
+			setIsCalculated(false)
+		} else if (lastUsedOperator) {
 			//If the last button pressed was an operator, replace expression with the new operator
 			setCalculationStack(() => {
 				return [...calculationDisplayStack.slice(0, -1), value]
@@ -39,6 +76,7 @@ export default function OperatorButton(props: {
 			setCalculationStack(() => {
 				return [mainDisplayStack.join(""), value]
 			})
+			setIsCalculated(false)
 		} else if (calculationDisplayStack.length > 0) {
 			// If there is already an expression in calculationDisplayStack, operate the display number and show result
 			// In both calculationDisplay and mainDisplay

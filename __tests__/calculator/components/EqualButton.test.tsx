@@ -206,6 +206,44 @@ describe("Equals button tests [=]", () => {
 		expect(calculationDisplay.textContent).toBe("1÷0=")
 		expect(mainDisplay.textContent).toBe("Error")
 	})
+	it("(Reciprocal) Equals button should calculate the expression and display the result", () => {
+		const mainDisplay = screen.getByTestId("mainDisplay")
+		const calculationDisplay = screen.getByTestId("calculationDisplay")
+		act(() => {
+			const numberButtonOne = screen.getByRole("button", {
+				name: "1",
+			})
+			const numberButtonZero = screen.getByRole("button", {
+				name: "0",
+			})
+			numberButtonOne.click()
+			numberButtonZero.click()
+		})
+
+		act(() => {
+			const reciprocalButton = screen.getByRole("button", {
+				name: "1/x",
+			})
+			reciprocalButton.click()
+		})
+
+		act(() => {
+			const addButton = screen.getByRole("button", {
+				name: "+",
+			})
+			addButton.click()
+		})
+
+		act(() => {
+			const equalButton = screen.getByRole("button", {
+				name: "=",
+			})
+			equalButton.click()
+		})
+
+		expect(mainDisplay.textContent).toBe("0.2")
+		expect(calculationDisplay.textContent).toBe("1/(10)+0.1=")
+	})
 	it("If Error after calculation, only clear buttons should be enabled, after clear clicked all should reenable", () => {
 		const mainDisplay = screen.getByTestId("mainDisplay")
 		const calculationDisplay = screen.getByTestId("calculationDisplay")

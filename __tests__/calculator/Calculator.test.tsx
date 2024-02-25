@@ -290,33 +290,6 @@ describe("Calculator Widget", () => {
 		})
 	})
 
-	describe("Reciprocal button tests [1/x]", () => {
-		it.todo(
-			"Reciprocal button should take the number in the display and calculate the reciprocal of the number then display the result"
-		)
-		it.todo(
-			"Reciprocal button should display the number in the display as a fraction in the calculation display ( i.e 1/(10) )"
-		)
-	})
-
-	describe("Square root button tests [√]", () => {
-		it.todo(
-			"Square root button should take the number in the display and calculate the square root of the number then display the result"
-		)
-		it.todo(
-			"Square root button should display the number in the display as a square root in the calculation display ( i.e √(36) )"
-		)
-	})
-
-	describe("Square button tests [x^2]", () => {
-		it.todo(
-			"Square button should take the number in the display and calculate the number squared then display the result"
-		)
-		it.todo(
-			"Square button should display the number in the display with the prefix 'sqr' in the calculation display ( i.e sqr(10) )"
-		)
-	})
-
 	describe("Memory button tests [MC,MR,M+,M-,M↓]", () => {
 		it.todo("Memory clear (MC) button should clear all items in memory")
 		it.todo(

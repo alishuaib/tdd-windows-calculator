@@ -24,17 +24,17 @@ export default function NumberButton(props: {
 			setMainDisplayStack([value])
 			setCalculationStack([])
 			setIsCalculated(false)
-			return
+		} else {
+			setMainDisplayStack((prevValue) => {
+				if (
+					(prevValue[0] === "0" && prevValue.length === 1) ||
+					lastUsedOperator
+				) {
+					return [value]
+				}
+				return [...prevValue, value]
+			})
 		}
-		setMainDisplayStack((prevValue) => {
-			if (
-				(prevValue[0] === "0" && prevValue.length === 1) ||
-				lastUsedOperator
-			) {
-				return [value]
-			}
-			return [...prevValue, value]
-		})
 		setLastUsedOperator(false)
 	}
 

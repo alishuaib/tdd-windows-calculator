@@ -2,6 +2,7 @@
 
 import Button from "./Button"
 import { useDisplay } from "../context/DisplayContext"
+import { detectAdvancedOperation } from "./AdvancedOperatorButton"
 
 export function processExpression(expression: string[]) {
 	type Operation = "+" | "-" | "×" | "÷"
@@ -12,9 +13,21 @@ export function processExpression(expression: string[]) {
 		"÷": (a: number, b: number) => a / b,
 	}
 
-	let result = operationFunctionMap[expression[1] as Operation](
-		parseFloat(expression[0]),
-		parseFloat(expression[2])
+	let firstNumber = expression[0]
+	let operator = expression[1] as Operation
+	let secondNumber = expression[2]
+
+	if (firstNumber.includes("$")) {
+		firstNumber = detectAdvancedOperation(firstNumber)
+	}
+
+	if (secondNumber.includes("$")) {
+		secondNumber = detectAdvancedOperation(secondNumber)
+	}
+
+	let result = operationFunctionMap[operator](
+		parseFloat(firstNumber),
+		parseFloat(secondNumber)
 	)
 	if (expression[1] == "÷" && expression[2] == "0") {
 		throw new Error("ZeroDivisionError")
@@ -30,14 +43,18 @@ export default function EqualButton() {
 		setMainDisplayStack,
 		isCalculationError,
 		setIsCalculationError,
+		isCalculated,
 		setIsCalculated,
+		setLastUsedOperator,
 	} = useDisplay()!
 
 	function handleEqualButtonClick(
 		event: React.MouseEvent<HTMLButtonElement>
 	) {
 		const value = (event.target as HTMLButtonElement).textContent as string
-
+		if (isCalculated && calculationDisplayStack.includes("=")) {
+			return
+		}
 		let answer: string
 		try {
 			answer = processExpression([
@@ -56,6 +73,7 @@ export default function EqualButton() {
 		setMainDisplayStack(() => [answer])
 
 		setIsCalculated(true)
+		setLastUsedOperator(false)
 	}
 
 	return (

@@ -28,12 +28,6 @@ export default function DisplayProvider({
 	const [isCalculationError, setIsCalculationError] = useState(false)
 	const [isCalculated, setIsCalculated] = useState(false)
 
-	// Clear the last used operator when the main display stack changes
-	// This only happens when a key other than an operator is pressed
-	useEffect(() => {
-		setLastUsedOperator(false)
-	}, [mainDisplayStack])
-
 	return (
 		<DisplayContext.Provider
 			value={{

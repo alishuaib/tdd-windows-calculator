@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Button from "./components/Button"
 import OperatorButton from "./components/OperatorButton"
+import AdvancedOperatorButton from "./components/AdvancedOperatorButton"
 import NumberButton from "./components/NumberButton"
 import ClearButton from "./components/ClearButton"
 import EqualButton from "./components/EqualButton"
@@ -79,9 +80,23 @@ export default function Calculator() {
 				data-testid="calculationDisplay"
 				className="text-2xl text-zinc-700 text-right flex w-full justify-end gap-[2px] h-[1em]"
 			>
-				{calculationDisplayStack.map((v) => (
-					<p>{v}</p>
-				))}
+				{calculationDisplayStack.map((v: string, i) => {
+					function format$(v: string) {
+						let index = v.indexOf("$")
+
+						let firstPart = v.substring(0, index)
+						let secondPart = v.substring(index + 1)
+
+						if (secondPart.includes("$")) {
+							secondPart = format$(secondPart)
+						}
+						return firstPart.replace("x", `(${secondPart})`)
+					}
+					if (v.includes("$")) {
+						v = format$(v)
+					}
+					return <p key={i}>{v}</p>
+				})}
 			</div>
 			<p
 				data-testid="mainDisplay"
@@ -102,9 +117,9 @@ export default function Calculator() {
 				<ClearButton type="clearEntry" />
 				<ClearButton type="clear" />
 				<ClearButton type="backspace" />
-				<Button disabled={isCalculationError}>1/x</Button>
-				<Button disabled={isCalculationError}>x^2</Button>
-				<Button disabled={isCalculationError}>2√x</Button>
+				<AdvancedOperatorButton operator="reciprocal" />
+				<AdvancedOperatorButton operator="squareroot" />
+				<AdvancedOperatorButton operator="square" />
 				<OperatorButton operator="divide" />
 				<NumberButton number="7" />
 				<NumberButton number="8" />
