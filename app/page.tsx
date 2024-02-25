@@ -1,6 +1,6 @@
 "use client"
 import Calculator from "./calculator/Calculator"
-import DisplayProvider from "./calculator/context/DisplayContext"
+import ContextManager from "./calculator/context/ContextManager"
 
 export default function Home() {
 	return (
@@ -8,9 +8,9 @@ export default function Home() {
 			id="bgContainer"
 			className="w-screen h-screen flex  justify-center items-center"
 		>
-			<DisplayProvider>
+			<ContextManager>
 				<Calculator />
-			</DisplayProvider>
+			</ContextManager>
 		</div>
 	)
 }

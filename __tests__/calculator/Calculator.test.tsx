@@ -1,15 +1,15 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import Calculator from "@/app/calculator/Calculator"
-import DisplayContext from "@/app/calculator/context/DisplayContext"
+import ContextManager from "@/app/calculator/context/ContextManager"
 import { act } from "react-dom/test-utils"
 
 describe("Calculator Widget", () => {
 	beforeEach(() => {
 		render(
-			<DisplayContext>
+			<ContextManager>
 				<Calculator />
-			</DisplayContext>
+			</ContextManager>
 		)
 	})
 
@@ -288,40 +288,6 @@ describe("Calculator Widget", () => {
 			expect(mainDisplay.textContent).toBe("4")
 			expect(calculationDisplay.textContent).toBe("4")
 		})
-	})
-
-	describe("Memory button tests [MC,MR,M+,M-,M↓]", () => {
-		it.todo("Memory clear (MC) button should clear all items in memory")
-		it.todo(
-			"Memory clear (MC) button should be disabled if no items in memory"
-		)
-		it.todo(
-			"Memory recall (MR) button should recall the last item in memory and display it"
-		)
-		it.todo(
-			"Memory recall (MR) button should be disabled if no items in memory"
-		)
-		it.todo(
-			"Memory add (M+) button should add the current number in the display to the last number in memory"
-		)
-		it.todo(
-			"Memory add (M+) button should insert the current number in the display to the memory after adding it to 0, only if no items in memory"
-		)
-		it.todo(
-			"Memory subtract (M-) button should subtract the current number in the display from the last number in memory"
-		)
-		it.todo(
-			"Memory subtract (M-) button should insert the current number in the display from the memory after subtracting it from 0, only if no items in memory"
-		)
-		it.todo(
-			"Memory store (M↓) button should display a list of all items in memory"
-		)
-		it.todo(
-			"Memory store (M↓) button should be disabled if no items in memory"
-		)
-		it.todo(
-			"Memory store (M↓) button should be display a list of all items in memory and allow user to delete items from memory"
-		)
 	})
 
 	describe("History button test", () => {
