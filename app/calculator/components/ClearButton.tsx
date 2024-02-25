@@ -6,8 +6,15 @@ import { useDisplay } from "../context/DisplayContext"
 export default function ClearButton(props: {
 	type: "clear" | "clearEntry" | "backspace"
 }) {
-	const { setCalculationStack, setMainDisplayStack, setLastUsedOperator } =
-		useDisplay()!
+	const {
+		setCalculationStack,
+		setMainDisplayStack,
+		setLastUsedOperator,
+		isCalculationError,
+		setIsCalculationError,
+		isCalculated,
+		setIsCalculated,
+	} = useDisplay()!
 
 	const typeSymbolMap = {
 		clear: "C",
@@ -19,6 +26,20 @@ export default function ClearButton(props: {
 		event: React.MouseEvent<HTMLButtonElement>
 	) {
 		const value = (event.target as HTMLButtonElement).textContent as string
+
+		if (isCalculationError) {
+			setMainDisplayStack(() => ["0"])
+			setCalculationStack(() => [])
+			setIsCalculationError(false)
+			return
+		}
+
+		if (isCalculated) {
+			setMainDisplayStack(() => ["0"])
+			setCalculationStack(() => [])
+			setIsCalculated(false)
+			return
+		}
 
 		switch (value) {
 			case "C":

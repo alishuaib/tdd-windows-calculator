@@ -9,6 +9,10 @@ interface DisplayContextProps {
 	setMainDisplayStack: React.Dispatch<React.SetStateAction<string[]>>
 	lastUsedOperator: boolean
 	setLastUsedOperator: React.Dispatch<React.SetStateAction<boolean>>
+	isCalculationError: boolean
+	setIsCalculationError: React.Dispatch<React.SetStateAction<boolean>>
+	isCalculated: boolean
+	setIsCalculated: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function DisplayProvider({
@@ -21,6 +25,8 @@ export default function DisplayProvider({
 	)
 	const [mainDisplayStack, setMainDisplayStack] = useState(["0"])
 	const [lastUsedOperator, setLastUsedOperator] = useState(false)
+	const [isCalculationError, setIsCalculationError] = useState(false)
+	const [isCalculated, setIsCalculated] = useState(false)
 
 	// Clear the last used operator when the main display stack changes
 	// This only happens when a key other than an operator is pressed
@@ -37,6 +43,10 @@ export default function DisplayProvider({
 				setMainDisplayStack,
 				lastUsedOperator,
 				setLastUsedOperator,
+				isCalculationError,
+				setIsCalculationError,
+				isCalculated,
+				setIsCalculated,
 			}}
 		>
 			{children}

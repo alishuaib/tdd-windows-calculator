@@ -2,6 +2,7 @@
 
 import Button from "./Button"
 import { useDisplay } from "../context/DisplayContext"
+import { processExpression } from "./EqualButton"
 
 export default function OperatorButton(props: {
 	operator: "add" | "subtract" | "multiply" | "divide"
@@ -13,29 +14,15 @@ export default function OperatorButton(props: {
 		setMainDisplayStack,
 		lastUsedOperator,
 		setLastUsedOperator,
+		isCalculationError,
+		isCalculated,
+		setIsCalculationError,
 	} = useDisplay()!
 	const operatorSymbolMap = {
 		add: "+",
 		subtract: "-",
 		multiply: "×",
 		divide: "÷",
-	}
-
-	function processExpression(expression: string[]) {
-		type Operation = "+" | "-" | "×" | "÷"
-		let operationFunctionMap = {
-			"+": (a: number, b: number) => a + b,
-			"-": (a: number, b: number) => a - b,
-			"×": (a: number, b: number) => a * b,
-			"÷": (a: number, b: number) => a / b,
-		}
-
-		let result = operationFunctionMap[expression[1] as Operation](
-			parseInt(expression[0]),
-			parseInt(expression[2])
-		)
-
-		return result.toString()
 	}
 
 	function handleOperatorButtonClick(
@@ -48,14 +35,23 @@ export default function OperatorButton(props: {
 			setCalculationStack(() => {
 				return [...calculationDisplayStack.slice(0, -1), value]
 			})
+		} else if (isCalculated) {
+			setCalculationStack(() => {
+				return [mainDisplayStack.join(""), value]
+			})
 		} else if (calculationDisplayStack.length > 0) {
 			// If there is already an expression in calculationDisplayStack, operate the display number and show result
 			// In both calculationDisplay and mainDisplay
-
-			let answer = processExpression([
-				...calculationDisplayStack,
-				mainDisplayStack.join(""),
-			])
+			let answer: string
+			try {
+				answer = processExpression([
+					...calculationDisplayStack,
+					mainDisplayStack.join(""),
+				])
+			} catch (error) {
+				answer = "Error"
+				setIsCalculationError(true)
+			}
 			setMainDisplayStack(() => [answer])
 			setCalculationStack(() => [answer, value])
 		} else {
@@ -71,6 +67,7 @@ export default function OperatorButton(props: {
 		<Button
 			onClick={handleOperatorButtonClick}
 			styleType="operationKey"
+			disabled={isCalculationError}
 		>
 			{operatorSymbolMap[props.operator]}
 		</Button>

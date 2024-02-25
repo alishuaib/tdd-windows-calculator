@@ -13,38 +13,200 @@ describe("Calculator Widget", () => {
 		)
 	})
 
-	describe("Equals button tests [=]", () => {
-		it.todo(
-			"(Add) Equals button should calculate the expression and display the result"
-		)
-		it.todo(
-			"(Subtract) Equals button should calculate the expression and display the result"
-		)
-		it.todo(
-			"(Multiply) Equals button should calculate the expression and display the result"
-		)
-		it.todo(
-			"(Divide) Equals button should calculate the expression and display the result"
-		)
-		it.todo(
-			"(Division by zero) Equals button should display an error message if the expression is invalid"
-		)
-	})
-
 	describe("Decimal button tests [.]", () => {
-		it.todo("Decimal button should insert a decimal point to the display")
-		it.todo(
-			"Decimal button should not insert a decimal point if one already exists in the display"
-		)
+		it("Decimal button should insert a decimal point to the display", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			act(() => {
+				const decimalButton = screen.getByRole("button", {
+					name: ".",
+				})
+				decimalButton.click()
+			})
+			expect(mainDisplay.textContent).toBe("0.")
+		})
+		it("Decimal button should not insert a decimal point if one already exists in the display", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			act(() => {
+				const decimalButton = screen.getByRole("button", {
+					name: ".",
+				})
+				decimalButton.click()
+				decimalButton.click()
+			})
+			expect(mainDisplay.textContent).toBe("0.")
+		})
+		it("After operator button is pressed, decimal button should insert a 0.", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+			act(() => {
+				const addButton = screen.getByRole("button", {
+					name: "+",
+				})
+				const decimalButton = screen.getByRole("button", {
+					name: ".",
+				})
+				addButton.click()
+				decimalButton.click()
+			})
+			expect(mainDisplay.textContent).toBe("0.")
+			expect(calculationDisplay.textContent).toBe("0+")
+		})
+		it("After equal button is pressed, decimal button should insert a 0.", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const addButton = screen.getByRole("button", { name: "+" })
+				addButton.click()
+			})
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const numberButtonNine = screen.getByRole("button", {
+					name: "9",
+				})
+				numberButtonNine.click()
+			})
+
+			act(() => {
+				const equalButton = screen.getByRole("button", {
+					name: "=",
+				})
+				equalButton.click()
+			})
+
+			expect(calculationDisplay.textContent).toBe("1+19=")
+			expect(mainDisplay.textContent).toBe("20")
+			act(() => {
+				const decimalButton = screen.getByRole("button", {
+					name: ".",
+				})
+				decimalButton.click()
+			})
+			expect(mainDisplay.textContent).toBe("0.")
+		})
 	})
 
 	describe("Sign button tests [+/-]", () => {
-		it.todo(
-			"Sign button should change the sign of the number in the display"
-		)
-		it.todo(
-			"Sign button should not change the sign of the number in the display if it is 0"
-		)
+		it("Sign button should change the sign of the number in the display", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				const numberButtonZero = screen.getByRole("button", {
+					name: "0",
+				})
+				numberButtonOne.click()
+				numberButtonZero.click()
+			})
+			act(() => {
+				const signButton = screen.getByRole("button", {
+					name: "+/-",
+				})
+				signButton.click()
+			})
+			expect(mainDisplay.textContent).toBe("-10")
+		})
+		it("Sign button should not change the sign of the number in the display if it is 0", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			act(() => {
+				const signButton = screen.getByRole("button", {
+					name: "+/-",
+				})
+				signButton.click()
+			})
+			expect(mainDisplay.textContent).toBe("0")
+		})
+		it("After operator button is pressed, sign button should change the sign of the number in the display", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				const numberButtonZero = screen.getByRole("button", {
+					name: "0",
+				})
+				numberButtonOne.click()
+				numberButtonZero.click()
+			})
+			act(() => {
+				const addButton = screen.getByRole("button", {
+					name: "+",
+				})
+				addButton.click()
+			})
+			act(() => {
+				const signButton = screen.getByRole("button", {
+					name: "+/-",
+				})
+				signButton.click()
+			})
+			expect(mainDisplay.textContent).toBe("-10")
+			expect(calculationDisplay.textContent).toBe("10+")
+		})
+		it("After equal button is pressed, sign button should change the sign of the number in the display and clear calculation display", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const addButton = screen.getByRole("button", { name: "+" })
+				addButton.click()
+			})
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const numberButtonNine = screen.getByRole("button", {
+					name: "9",
+				})
+				numberButtonNine.click()
+			})
+
+			act(() => {
+				const equalButton = screen.getByRole("button", {
+					name: "=",
+				})
+				equalButton.click()
+			})
+
+			expect(calculationDisplay.textContent).toBe("1+19=")
+			expect(mainDisplay.textContent).toBe("20")
+			act(() => {
+				const signButton = screen.getByRole("button", {
+					name: "+/-",
+				})
+				signButton.click()
+			})
+			expect(mainDisplay.textContent).toBe("-20")
+			expect(calculationDisplay.textContent).toBe("")
+		})
 	})
 
 	describe("Percentage calculation button tests [%]", () => {
