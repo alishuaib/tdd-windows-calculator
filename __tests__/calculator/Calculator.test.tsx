@@ -1,14 +1,23 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import Calculator from "@/app/calculator/Calculator"
+import DisplayContext from "@/app/calculator/context/DisplayContext"
 import { act } from "react-dom/test-utils"
+import exp from "constants"
 
 describe("Calculator Widget", () => {
+	beforeEach(() => {
+		render(
+			<DisplayContext>
+				<Calculator />
+			</DisplayContext>
+		)
+	})
+
 	// Number button tests (0-9)
 
 	describe("Number button tests [0-9]", () => {
 		it("number buttons should insert numbers to the display", () => {
-			render(<Calculator />)
 			const mainDisplay = screen.getByTestId("mainDisplay")
 
 			act(() => {
@@ -25,23 +34,113 @@ describe("Calculator Widget", () => {
 		})
 
 		it("number buttons should not insert a leading zero to the display", () => {
-			render(<Calculator />)
 			const mainDisplay = screen.getByTestId("mainDisplay")
 
-			const zeroButton = screen.getByRole("button", { name: "0" })
-			zeroButton.click()
+			act(() => {
+				const zeroButton = screen.getByRole("button", { name: "0" })
+				zeroButton.click()
+			})
+
 			expect(mainDisplay.textContent).toContain("0")
 		})
 	})
 
 	// it("number buttons should not insert a leading zero to the display", () => {
-	// 	render(<Calculator />)
+	//
 	// 	const mainDisplay = screen.getByTestId("mainDisplay")
 
 	// 	const zeroButton = screen.getByRole("button", { name: "0" })
 	// 	zeroButton.click()
 	// 	expect(mainDisplay.textContent).toContain("0")
 	// })
+
+	describe("Operator button tests [+,-,×,÷]", () => {
+		it("Add button should move display to calculation display and insert +", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const addButton = screen.getByRole("button", { name: "+" })
+				addButton.click()
+			})
+
+			expect(calculationDisplay.textContent).toContain("1+")
+			expect(mainDisplay.textContent).toContain("1")
+		})
+		it("Subtract button should move display to calculation display and insert -", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const subtractButton = screen.getByRole("button", { name: "-" })
+				subtractButton.click()
+			})
+
+			expect(calculationDisplay.textContent).toContain("1-")
+			expect(mainDisplay.textContent).toContain("1")
+		})
+		it("Multiply button should move display to calculation display and insert ×", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const multiplyButton = screen.getByRole("button", { name: "×" })
+				multiplyButton.click()
+			})
+
+			expect(calculationDisplay.textContent).toContain("1×")
+			expect(mainDisplay.textContent).toContain("1")
+		})
+		it("Divide button should move display to calculation display and insert ÷", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const divideButton = screen.getByRole("button", { name: "÷" })
+				divideButton.click()
+			})
+
+			expect(calculationDisplay.textContent).toContain("1÷")
+			expect(mainDisplay.textContent).toContain("1")
+		})
+		it.todo(
+			"Operator button should replace the last operator if one exists in calculation display"
+		)
+		it.todo(
+			"Operator button should keep last number in display after moving to calculation display"
+		)
+		it.todo(
+			"Operator button after inputting a second number should calculate the expression and display the result"
+		)
+	})
 
 	describe("Clearing button tests [CE,C,←]", () => {
 		// Clear button tests (C)
@@ -61,30 +160,6 @@ describe("Calculator Widget", () => {
 		// Backspace button tests (←)
 		it.todo(
 			"backspace (←) button should remove the last character from the display"
-		)
-	})
-
-	describe("Operator button tests [+,-,×,÷]", () => {
-		it.todo(
-			"Add button should move display to calculation display and insert +"
-		)
-		it.todo(
-			"Subtract button should move display to calculation display and insert -"
-		)
-		it.todo(
-			"Multiply button should move display to calculation display and insert ×"
-		)
-		it.todo(
-			"Divide button should move display to calculation display and insert ÷"
-		)
-		it.todo(
-			"Operator button should replace the last operator if one exists in calculation display"
-		)
-		it.todo(
-			"Operator button should keep last number in display after moving to calculation display"
-		)
-		it.todo(
-			"Operator button after inputting a second number should calculate the expression and display the result"
 		)
 	})
 
