@@ -210,9 +210,84 @@ describe("Calculator Widget", () => {
 	})
 
 	describe("Percentage calculation button tests [%]", () => {
-		it.todo(
-			"Percentage button should take the number in the display and convert it to a percentage calculation of the number in the calculation display"
-		)
+		it("Percentage button should take the number in the display and convert it to a percentage calculation of the number in the calculation display", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				const numberButtonZero = screen.getByRole("button", {
+					name: "0",
+				})
+				numberButtonOne.click()
+				numberButtonZero.click()
+			})
+			act(() => {
+				const addButton = screen.getByRole("button", {
+					name: "+",
+				})
+				addButton.click()
+			})
+			act(() => {
+				const percentageButton = screen.getByRole("button", {
+					name: "%",
+				})
+				percentageButton.click()
+			})
+			expect(mainDisplay.textContent).toBe("1")
+			expect(calculationDisplay.textContent).toBe("10+1")
+		})
+
+		it("After equal button is pressed, percentage button should calculate the percentage of displayed number by answer (10+10=20 -> 20%20=4)", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+
+			const numberButtonOne = screen.getByRole("button", {
+				name: "1",
+			})
+			const numberButtonZero = screen.getByRole("button", {
+				name: "0",
+			})
+
+			act(() => {
+				numberButtonOne.click()
+				numberButtonZero.click()
+			})
+
+			expect(mainDisplay.textContent).toBe("10")
+			expect(calculationDisplay.textContent).toBe("")
+
+			act(() => {
+				const addButton = screen.getByRole("button", {
+					name: "+",
+				})
+				addButton.click()
+			})
+
+			expect(mainDisplay.textContent).toBe("10")
+			expect(calculationDisplay.textContent).toBe("10+")
+
+			act(() => {
+				const equalButton = screen.getByRole("button", {
+					name: "=",
+				})
+				equalButton.click()
+			})
+
+			expect(mainDisplay.textContent).toBe("20")
+			expect(calculationDisplay.textContent).toBe("10+10=")
+
+			act(() => {
+				const percentageButton = screen.getByRole("button", {
+					name: "%",
+				})
+				percentageButton.click()
+			})
+
+			expect(mainDisplay.textContent).toBe("4")
+			expect(calculationDisplay.textContent).toBe("4")
+		})
 	})
 
 	describe("Reciprocal button tests [1/x]", () => {

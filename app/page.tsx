@@ -4,7 +4,10 @@ import DisplayProvider from "./calculator/context/DisplayContext"
 
 export default function Home() {
 	return (
-		<div className="w-screen h-screen flex">
+		<div
+			id="bgContainer"
+			className="w-screen h-screen flex  justify-center items-center"
+		>
 			<DisplayProvider>
 				<Calculator />
 			</DisplayProvider>

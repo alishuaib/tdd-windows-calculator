@@ -51,17 +51,41 @@ export default function Calculator() {
 		setLastUsedOperator(false)
 	}
 
+	function handlePercentageButtonClick() {
+		let valueInDisplay: number
+		let valueInCalculation: number
+
+		if (isCalculated) {
+			setCalculationStack([])
+			valueInDisplay = parseFloat(mainDisplayStack.join(""))
+			valueInCalculation = valueInDisplay
+		} else {
+			valueInDisplay = parseFloat(mainDisplayStack.join(""))
+			valueInCalculation = parseFloat(calculationDisplayStack[0] ?? 0)
+		}
+
+		const result = (valueInCalculation * valueInDisplay) / 100
+		setMainDisplayStack(() => {
+			return [result.toString()]
+		})
+		setCalculationStack((prevValue) => [...prevValue, result.toString()])
+		setLastUsedOperator(false)
+		setIsCalculated(false)
+	}
+
 	return (
-		<div className="flex flex-col gap-2">
-			<p
+		<div className="flex flex-col gap-4 bg-zinc-900 p-1 border-zinc-500 border">
+			<div
 				data-testid="calculationDisplay"
-				className="text-md text-gray-500 h-10 text-right"
+				className="text-2xl text-zinc-700 text-right flex w-full justify-end gap-[2px] h-[1em]"
 			>
-				{calculationDisplayStack}
-			</p>
+				{calculationDisplayStack.map((v) => (
+					<p>{v}</p>
+				))}
+			</div>
 			<p
 				data-testid="mainDisplay"
-				className="text-2xl h-10 text-right"
+				className="text-5xl text-right"
 			>
 				{mainDisplayStack}
 			</p>
@@ -69,7 +93,12 @@ export default function Calculator() {
 				id="keypad"
 				className="grid grid-cols-4 gap-1"
 			>
-				<Button disabled={isCalculationError}>%</Button>
+				<Button
+					onClick={handlePercentageButtonClick}
+					disabled={isCalculationError}
+				>
+					%
+				</Button>
 				<ClearButton type="clearEntry" />
 				<ClearButton type="clear" />
 				<ClearButton type="backspace" />
@@ -92,6 +121,7 @@ export default function Calculator() {
 				<Button
 					onClick={handleSignChangeButtonClick}
 					disabled={isCalculationError}
+					styleType="numberKey"
 				>
 					+/-
 				</Button>
@@ -99,6 +129,7 @@ export default function Calculator() {
 				<Button
 					onClick={handleDecimalButtonClick}
 					disabled={isCalculationError}
+					styleType="numberKey"
 				>
 					.
 				</Button>

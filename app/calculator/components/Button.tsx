@@ -8,20 +8,18 @@ interface ButtonProps {
 }
 
 export default function Button(props: ButtonProps) {
-	const { styleType = "numberKey", disabled = false } = props
+	const { styleType = "operationKey", disabled = false } = props
+	const styleDefault = "px-6 py-3 rounded-sm disabled:opacity-50 text-xl"
 	const style = {
-		numberKey:
-			"px-8 py-3 bg-gray-600 rounded-sm hover:bg-gray-500 disabled:opacity-50",
-		operationKey:
-			"px-8 py-3 bg-gray-700 rounded-sm hover:bg-gray-600  disabled:opacity-50",
-		equalKey:
-			"px-8 py-3 bg-blue-500 rounded-sm hover:bg-blue-400  disabled:opacity-50",
+		numberKey: "bg-neutral-700 hover:bg-neutral-800",
+		operationKey: "bg-neutral-800 hover:bg-neutral-700",
+		equalKey: "bg-sky-300 hover:bg-sky-400 text-zinc-900 ",
 	}
 
 	return (
 		<button
 			disabled={disabled}
-			className={style[styleType]}
+			className={style[styleType].concat(" ", styleDefault)}
 			onClick={props.onClick}
 		>
 			{props.children}
