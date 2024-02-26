@@ -9,7 +9,13 @@ import ClearButton from "./components/ClearButton"
 import EqualButton from "./components/EqualButton"
 import MemoryButton from "./components/MemoryButton"
 import MemoryPanel from "./components/HistoryPanel"
-import { ClockCounterClockwise, GithubLogo } from "@phosphor-icons/react"
+import {
+	ClockCounterClockwise,
+	GithubLogo,
+	Minus,
+	Square,
+	X,
+} from "@phosphor-icons/react"
 import { useDisplay } from "./context/DisplayContext"
 
 export default function Calculator() {
@@ -146,8 +152,21 @@ export default function Calculator() {
 	}, [mainDisplayString])
 
 	return (
-		<div className="relative flex flex-col gap-4 bg-zinc-900 p-1 border-zinc-500 border overflow-hidden h-[560px] w-[320px]">
-			<div className="flex items-center gap-2 pt-2 px-1">
+		<div className="relative flex flex-col bg-zinc-900 p-1 border-zinc-500 border overflow-hidden h-[560px] w-[320px]">
+			<div className="flex items-center justify-between px-2 pt-1 pb-2">
+				<div className="flex items-center gap-3 px-1">
+					<div className=" w-4 h-5 flex items-center justify-center">
+						<p className="text-3xl pb-2">🖩</p>
+					</div>
+					<p className="text-xs leading-none">Calculator</p>
+				</div>
+				<div className="flex text-sm text-zinc-500 gap-6">
+					<Minus />
+					<Square />
+					<X />
+				</div>
+			</div>
+			<div className="flex items-center gap-1 pt-2 pb-1 px-1">
 				<div className="cursor-pointer flex self-end items-center justify-center h-fit w-fit aspect-square text-2xl text-neutral-100 p-1 hover:bg-neutral-700 rounded-sm">
 					<button
 						title="Open Github Repository"
@@ -159,10 +178,13 @@ export default function Calculator() {
 							)
 						}}
 					>
-						<GithubLogo color="#ffffff" />
+						<GithubLogo
+							weight="duotone"
+							color="#ffffff"
+						/>
 					</button>
 				</div>
-				<p className="font-semibold text-xl">Standard</p>
+				<p className="font-semibold text-xl pb-1">Standard</p>
 				<div className="ml-auto cursor-pointer flex self-end items-center justify-center h-fit w-fit aspect-square text-2xl text-neutral-100 p-1 hover:bg-neutral-700 rounded-sm">
 					<button
 						title="History (Ctrl+H)"
@@ -177,36 +199,38 @@ export default function Calculator() {
 					</button>
 				</div>
 			</div>
-			<div
-				data-testid="calculationDisplay"
-				className="text-2xl text-zinc-700 text-right flex w-full justify-end gap-[2px] h-[1em] flex-1"
-			>
-				{calculationDisplayStack.map((v: string, i) => {
-					function format$(v: string) {
-						let index = v.indexOf("$")
+			<div className="flex flex-col flex-1 items-end gap-1">
+				<div
+					data-testid="calculationDisplay"
+					className=" text-zinc-400 text-right flex w-full justify-end gap-[2px] h-[1.5em]"
+				>
+					{calculationDisplayStack.map((v: string, i) => {
+						function format$(v: string) {
+							let index = v.indexOf("$")
 
-						let firstPart = v.substring(0, index)
-						let secondPart = v.substring(index + 1)
+							let firstPart = v.substring(0, index)
+							let secondPart = v.substring(index + 1)
 
-						if (secondPart.includes("$")) {
-							secondPart = format$(secondPart)
+							if (secondPart.includes("$")) {
+								secondPart = format$(secondPart)
+							}
+							return firstPart.replace("x", `(${secondPart})`)
 						}
-						return firstPart.replace("x", `(${secondPart})`)
-					}
-					if (v.includes("$")) {
-						v = format$(v)
-					}
-					return <p key={i}>{v}</p>
-				})}
+						if (v.includes("$")) {
+							v = format$(v)
+						}
+						return <p key={i}>{v}</p>
+					})}
+				</div>
+				<p
+					ref={containerRef}
+					data-testid="mainDisplay"
+					style={{ fontSize: `${mainDisplayFontSize}rem` }}
+					className="text-right font-semibold leading-none overflow-x-clip w-[310px]"
+				>
+					{mainDisplayString}
+				</p>
 			</div>
-			<p
-				ref={containerRef}
-				data-testid="mainDisplay"
-				style={{ fontSize: `${mainDisplayFontSize}rem` }}
-				className="text-right font-semibold h-min-[2.8rem] overflow-x-clip w-[310px]"
-			>
-				{mainDisplayString}
-			</p>
 			<div className="flex flex-col gap-1">
 				<div
 					id="memoryPad"
