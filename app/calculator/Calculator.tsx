@@ -41,6 +41,26 @@ export default function Calculator() {
 					handlePercentageButtonClick()
 					break
 			}
+			if (event.key == "h" && event.ctrlKey) {
+				if (historyStack.length === 0) return
+				setOpenMemoryHistoryPanel(true)
+				setIsShowHistory(true)
+			}
+			if (event.key == "c" && event.ctrlKey) {
+				navigator.clipboard.writeText(mainDisplayStack.join(""))
+			}
+			if (event.key == "v" && event.ctrlKey) {
+				//Support for firefox like browsers (prevents reading from clipboard)
+				if (navigator.clipboard.readText == undefined) {
+					console.log("Clipboard read not supported")
+					return
+				}
+				navigator.clipboard.readText().then((text) => {
+					//Check if the clipboard contains a number
+					if (isNaN(parseFloat(text))) return
+					setMainDisplayStack([text])
+				})
+			}
 		}
 		window.addEventListener("keydown", handleKeyDown)
 		return () => {

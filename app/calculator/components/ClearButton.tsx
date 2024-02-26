@@ -30,7 +30,10 @@ export default function ClearButton(props: {
 			backspace: "Backspace",
 		}
 		function handleKeyDown(event: KeyboardEvent) {
-			if (event.key === typeKeyMap[props.type]) {
+			if (
+				event.key === typeKeyMap[props.type] &&
+				event.ctrlKey == false
+			) {
 				event.preventDefault()
 				handleOperatorButtonClick()
 			}

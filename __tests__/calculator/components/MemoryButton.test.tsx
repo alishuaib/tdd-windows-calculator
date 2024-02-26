@@ -125,15 +125,11 @@ describe("Memory button tests [MC,MR,M+,M-,M↓]", () => {
 		expect(memoryItem0.textContent).toBe("5")
 	})
 	it("Memory clear (MC) button should be disabled if no items in memory", () => {
-		const memoryAddButton = screen.getByRole("button", {
-			name: "MC",
-		})
-		expect(memoryAddButton).toBeDisabled()
+		const memoryClearButton = screen.getByTitle("Clear all memory (Ctrl+L)")
+		expect(memoryClearButton).toBeDisabled()
 	})
 	it("Memory clear (MC) button should clear all items in memory", () => {
-		const memoryAddButton = screen.getByRole("button", {
-			name: "MC",
-		})
+		const memoryClearButton = screen.getByTitle("Clear all memory (Ctrl+L)")
 
 		act(() => {
 			const numberButtonOne = screen.getByRole("button", {
@@ -149,11 +145,11 @@ describe("Memory button tests [MC,MR,M+,M-,M↓]", () => {
 			const memoryAddButton = screen.getByTitle("Memory add (Ctrl+P)")
 			memoryAddButton.click()
 		})
-		expect(memoryAddButton).toBeEnabled()
+		expect(memoryClearButton).toBeEnabled()
 		act(() => {
-			memoryAddButton.click()
+			memoryClearButton.click()
 		})
-		expect(memoryAddButton).toBeDisabled()
+		expect(memoryClearButton).toBeDisabled()
 	})
 
 	it("Memory recall (MR) button should be disabled if no items in memory", () => {

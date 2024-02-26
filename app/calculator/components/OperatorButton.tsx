@@ -36,7 +36,10 @@ export default function OperatorButton(props: {
 			divide: "/",
 		}
 		function handleKeyDown(event: KeyboardEvent) {
-			if (event.key === operatorKeyMap[props.operator]) {
+			if (
+				event.key === operatorKeyMap[props.operator] &&
+				event.ctrlKey == false
+			) {
 				event.preventDefault()
 				handleOperatorButtonClick()
 			}

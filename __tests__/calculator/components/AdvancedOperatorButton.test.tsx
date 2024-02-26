@@ -1,15 +1,15 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import Calculator from "@/app/calculator/Calculator"
-import DisplayContext from "@/app/calculator/context/DisplayContext"
+import ContextManager from "@/app/calculator/context/ContextManager"
 import { act } from "react-dom/test-utils"
 
 describe("Operator button tests [+,-,×,÷]", () => {
 	beforeEach(() => {
 		render(
-			<DisplayContext>
+			<ContextManager>
 				<Calculator />
-			</DisplayContext>
+			</ContextManager>
 		)
 	})
 
@@ -67,6 +67,33 @@ describe("Operator button tests [+,-,×,÷]", () => {
 
 			expect(mainDisplay.textContent).toBe("10")
 			expect(calculationDisplay.textContent).toBe("1/(1/(10))")
+		})
+		it("After using a operator, reciprocal should be added to the calculation display and shown on display", () => {
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			const calculationDisplay = screen.getByTestId("calculationDisplay")
+			act(() => {
+				const numberButtonOne = screen.getByRole("button", {
+					name: "1",
+				})
+				numberButtonOne.click()
+			})
+
+			act(() => {
+				const addButton = screen.getByRole("button", {
+					name: "+",
+				})
+				addButton.click()
+			})
+
+			act(() => {
+				const reciprocalButton = screen.getByRole("button", {
+					name: "1/x",
+				})
+				reciprocalButton.click()
+			})
+
+			expect(mainDisplay.textContent).toBe("1")
+			expect(calculationDisplay.textContent).toBe("1+1/(1)")
 		})
 		it("After a reciprocal, if number changes reset calculation", () => {
 			const mainDisplay = screen.getByTestId("mainDisplay")
@@ -212,7 +239,7 @@ describe("Operator button tests [+,-,×,÷]", () => {
 				squareRootButton.click()
 			})
 			expect(mainDisplay.textContent).toBe("6")
-			expect(calculationDisplay.textContent).toBe("²√(36)")
+			expect(calculationDisplay.textContent).toBe("√(36)")
 		})
 	})
 
@@ -234,7 +261,7 @@ describe("Operator button tests [+,-,×,÷]", () => {
 				squareButton.click()
 			})
 			expect(mainDisplay.textContent).toBe("4")
-			expect(calculationDisplay.textContent).toBe("(2)²")
+			expect(calculationDisplay.textContent).toBe("sqr(2)")
 		})
 	})
 })

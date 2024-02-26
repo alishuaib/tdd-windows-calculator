@@ -2,6 +2,7 @@
 
 import { useMemory } from "../context/MemoryContext"
 import { useDisplay } from "../context/DisplayContext"
+import { useEffect } from "react"
 
 interface ButtonProps {
 	type: "clear" | "recall" | "add" | "subtract" | "save" | "history"
@@ -46,6 +47,27 @@ export default function MemoryButton(props: ButtonProps) {
 		save: "Memory store (Ctrl+M)",
 		history: "Memory",
 	}
+
+	useEffect(() => {
+		const typeKeyMap = {
+			clear: "l",
+			recall: "r",
+			add: "p",
+			subtract: "q",
+			save: "m",
+			history: "n/a",
+		}
+		function handleKeyDown(event: KeyboardEvent) {
+			if (event.ctrlKey && event.key === typeKeyMap[props.type]) {
+				event.preventDefault()
+				handleMap[props.type]()
+			}
+		}
+		window.addEventListener("keydown", handleKeyDown)
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown)
+		}
+	})
 
 	const handleMap = {
 		clear: () => {

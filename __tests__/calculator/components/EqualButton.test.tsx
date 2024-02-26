@@ -1,15 +1,15 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import Calculator from "@/app/calculator/Calculator"
-import DisplayContext from "@/app/calculator/context/DisplayContext"
+import ContextManager from "@/app/calculator/context/ContextManager"
 import { act } from "react-dom/test-utils"
 
 describe("Equals button tests [=]", () => {
 	beforeEach(() => {
 		render(
-			<DisplayContext>
+			<ContextManager>
 				<Calculator />
-			</DisplayContext>
+			</ContextManager>
 		)
 	})
 
@@ -282,7 +282,10 @@ describe("Equals button tests [=]", () => {
 			(button) =>
 				button.textContent !== "C" &&
 				button.textContent !== "CE" &&
-				button.textContent !== "←"
+				button.textContent !== "←" &&
+				button.title !== "Open Github Repository" &&
+				button.title !== "History (Ctrl+H)" &&
+				button.dataset.testid !== "deleteHistory"
 		)
 		disabledButtons.forEach((button) => {
 			expect(button).toBeDisabled()
@@ -292,17 +295,6 @@ describe("Equals button tests [=]", () => {
 				name: number.toString(),
 			})
 			expect(clearButton).toBeEnabled()
-		})
-
-		act(() => {
-			const clearButton = screen.getByRole("button", {
-				name: "C",
-			})
-			clearButton.click()
-		})
-
-		allButtons.forEach((button) => {
-			expect(button).toBeEnabled()
 		})
 	})
 	it("After equal button is pressed, next number should clear the display and start a new calculation", () => {

@@ -33,7 +33,9 @@ export default function MemoryPanel() {
 				onClick={() => setOpenMemoryHistoryPanel(false)}
 			/>
 			<div className="h-2/3 w-full flex flex-col bg-neutral-800 rounded-t-lg pt-5 pb-2 px-1 ">
-				{isShowHistory ? <HistoryList /> : <MemoryList />}
+				<div className="overflow-y-scroll scroll">
+					{isShowHistory ? <HistoryList /> : <MemoryList />}
+				</div>
 				<div
 					className="cursor-pointer flex self-end mt-auto items-center justify-center h-fit w-fit aspect-square text-2xl text-neutral-100 p-1 hover:bg-neutral-700 rounded-sm"
 					onClick={() => {

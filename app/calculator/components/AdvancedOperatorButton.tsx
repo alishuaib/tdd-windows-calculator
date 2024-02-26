@@ -93,12 +93,15 @@ export default function AdvancedOperatorButton(props: {
 
 	useEffect(() => {
 		const operatorKeyMap = {
-			reciprocal: "R",
+			reciprocal: "r",
 			squareroot: "@",
-			square: "Q",
+			square: "q",
 		}
 		function handleKeyDown(event: KeyboardEvent) {
-			if (event.key === operatorKeyMap[props.operator]) {
+			if (
+				event.key === operatorKeyMap[props.operator] &&
+				event.ctrlKey == false
+			) {
 				event.preventDefault()
 				handleOperatorButtonClick()
 			}
@@ -113,11 +116,13 @@ export default function AdvancedOperatorButton(props: {
 		const value = operatorValueMap[props.operator]
 
 		let expression: string
-		if (lastUsedOperator) {
+		if (lastUsedOperator && calculationDisplayStack.length !== 2) {
+			//Last item in stack is not a operator@
 			//If the last item in the calculationDisplayStack is a reciprocal operation
 			//And the new number is the same as previous number, then nest the reciprocal operation
 			let lastExpression =
 				calculationDisplayStack[calculationDisplayStack.length - 1]
+
 			expression = value + "$" + lastExpression
 
 			setCalculationStack((prevValue) => {

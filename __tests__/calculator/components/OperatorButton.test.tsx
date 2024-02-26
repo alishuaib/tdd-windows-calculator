@@ -1,15 +1,15 @@
 import "@testing-library/jest-dom"
 import { render, screen } from "@testing-library/react"
 import Calculator from "@/app/calculator/Calculator"
-import DisplayContext from "@/app/calculator/context/DisplayContext"
+import ContextManager from "@/app/calculator/context/ContextManager"
 import { act } from "react-dom/test-utils"
 
 describe("Operator button tests [+,-,×,÷]", () => {
 	beforeEach(() => {
 		render(
-			<DisplayContext>
+			<ContextManager>
 				<Calculator />
-			</DisplayContext>
+			</ContextManager>
 		)
 	})
 

@@ -50,3 +50,26 @@ body {
 #bgContainer div {
 	z-index: 10;
 }
+
+/* For Chrome, Safari, and Opera */
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: #262626;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #94a3a3;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #ffffff;
+}
+
+/* For Firefox */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: #94a3a3 #262626;
+}

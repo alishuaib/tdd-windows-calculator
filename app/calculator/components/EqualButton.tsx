@@ -52,7 +52,10 @@ export default function EqualButton() {
 
 	useEffect(() => {
 		function handleKeyDown(event: KeyboardEvent) {
-			if (event.key === "=" || event.key === "Enter") {
+			if (
+				(event.key === "=" || event.key === "Enter") &&
+				event.ctrlKey == false
+			) {
 				event.preventDefault()
 				handleEqualButtonClick()
 			}
@@ -78,11 +81,19 @@ export default function EqualButton() {
 			answer = "Error"
 			setIsCalculationError(true)
 		}
-		setCalculationStack(() => [
-			...calculationDisplayStack,
-			mainDisplayStack.join(""),
-			value,
-		])
+		if (
+			calculationDisplayStack[
+				calculationDisplayStack.length - 1
+			].includes("$")
+		) {
+			setCalculationStack(() => [...calculationDisplayStack, value])
+		} else {
+			setCalculationStack(() => [
+				...calculationDisplayStack,
+				mainDisplayStack.join(""),
+				value,
+			])
+		}
 		setMainDisplayStack(() => [answer])
 		addToHistory(
 			[answer],

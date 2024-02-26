@@ -19,7 +19,7 @@ export default function NumberButton(props: {
 
 	useEffect(() => {
 		function handleKeyDown(event: KeyboardEvent) {
-			if (event.key === props.number) {
+			if (event.key === props.number && event.ctrlKey == false) {
 				event.preventDefault()
 				handleNumberButtonClick()
 			}
