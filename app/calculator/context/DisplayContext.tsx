@@ -13,6 +13,13 @@ interface DisplayContextProps {
 	setIsCalculationError: React.Dispatch<React.SetStateAction<boolean>>
 	isCalculated: boolean
 	setIsCalculated: React.Dispatch<React.SetStateAction<boolean>>
+	historyStack: { main: string[]; calculation: string[] }[]
+	addToHistory: (main: string[], calculation: string[]) => void
+	clearHistory: () => void
+	isShowHistory: boolean
+	setIsShowHistory: React.Dispatch<React.SetStateAction<boolean>>
+	openMemoryHistoryPanel: boolean
+	setOpenMemoryHistoryPanel: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function DisplayProvider({
@@ -24,10 +31,28 @@ export default function DisplayProvider({
 		[]
 	)
 	const [mainDisplayStack, setMainDisplayStack] = useState(["0"])
+	const [historyStack, setHistoryStack] = useState<
+		{ main: string[]; calculation: string[] }[]
+	>([])
+	const [isShowHistory, setIsShowHistory] = useState(false)
+	const [openMemoryHistoryPanel, setOpenMemoryHistoryPanel] = useState(false)
 	const [lastUsedOperator, setLastUsedOperator] = useState(false)
 	const [isCalculationError, setIsCalculationError] = useState(false)
 	const [isCalculated, setIsCalculated] = useState(false)
 
+	function addToHistory(main: string[], calculation: string[]) {
+		setHistoryStack((prevValue) => {
+			const newHistoryItem = {
+				main: main,
+				calculation: calculation,
+			}
+			return [...prevValue, newHistoryItem]
+		})
+	}
+
+	function clearHistory() {
+		setHistoryStack([])
+	}
 	return (
 		<DisplayContext.Provider
 			value={{
@@ -41,6 +66,13 @@ export default function DisplayProvider({
 				setIsCalculationError,
 				isCalculated,
 				setIsCalculated,
+				historyStack,
+				addToHistory,
+				clearHistory,
+				isShowHistory,
+				setIsShowHistory,
+				openMemoryHistoryPanel,
+				setOpenMemoryHistoryPanel,
 			}}
 		>
 			{children}

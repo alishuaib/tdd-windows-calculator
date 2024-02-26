@@ -290,19 +290,6 @@ describe("Calculator Widget", () => {
 		})
 	})
 
-	describe("History button test", () => {
-		it.todo(
-			"History button should display a list of all previous calculations"
-		)
-		it.todo("History button should be disabled if no previous calculations")
-		it.todo(
-			"History button should display a list of all previous calculations and allow user to delete items from history"
-		)
-		it.todo(
-			"History button should display a list of all previous calculations and allow user to recall items from history"
-		)
-	})
-
 	describe("Github button test", () => {
 		it.todo(
 			"Github button should open a new tab with the github repository"

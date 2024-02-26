@@ -5,12 +5,20 @@ import { useDisplay } from "../context/DisplayContext"
 
 interface ButtonProps {
 	type: "clear" | "recall" | "add" | "subtract" | "save" | "history"
+	index?: number
+	styleOverride?: string
 }
 
 export default function MemoryButton(props: ButtonProps) {
-	const { mainDisplayStack, isCalculationError, setIsCalculated } =
-		useDisplay()!
-	const { memoryStack, setIsShowMemory, ...handle } = useMemory()!
+	const {
+		mainDisplayStack,
+		isCalculationError,
+		setIsCalculated,
+		setMainDisplayStack,
+		setOpenMemoryHistoryPanel,
+		setIsShowHistory,
+	} = useDisplay()!
+	const { memoryStack, ...handle } = useMemory()!
 
 	const typeMap = {
 		clear: "MC",
@@ -21,22 +29,61 @@ export default function MemoryButton(props: ButtonProps) {
 		history: "M↓",
 	}
 
+	const titleMap = {
+		clear:
+			props.index !== undefined
+				? "Clear memory item"
+				: "Clear all memory (Ctrl+L)",
+		recall: "Memory recall (Ctrl+R)",
+		add:
+			props.index !== undefined
+				? "Add to memory item"
+				: "Memory add (Ctrl+P)",
+		subtract:
+			props.index !== undefined
+				? "Subtract from memory item"
+				: "Memory subtract (Ctrl+Q)",
+		save: "Memory store (Ctrl+M)",
+		history: "Memory",
+	}
+
 	const handleMap = {
-		clear: handle.clearMemoryStack,
-		recall: handle.recallMemoryStack,
+		clear: () => {
+			props.index !== undefined
+				? handle.removeMemoryStack(props.index)
+				: handle.clearMemoryStack()
+		},
+		recall: () => {
+			let lastMemoryValue = handle.recallMemoryStack()
+			setMainDisplayStack([lastMemoryValue.toString()])
+		},
 		add: () => {
-			handle.addMemoryStack(parseFloat(mainDisplayStack.join("")))
+			props.index !== undefined
+				? handle.addMemoryStack(
+						parseFloat(mainDisplayStack.join("")),
+						props.index
+				  )
+				: handle.addMemoryStack(parseFloat(mainDisplayStack.join("")))
 			setIsCalculated(true)
 		},
 		subtract: () => {
-			handle.subtractMemoryStack(parseFloat(mainDisplayStack.join("")))
+			props.index !== undefined
+				? handle.subtractMemoryStack(
+						parseFloat(mainDisplayStack.join("")),
+						props.index
+				  )
+				: handle.subtractMemoryStack(
+						parseFloat(mainDisplayStack.join(""))
+				  )
 			setIsCalculated(true)
 		},
 		save: () => {
 			handle.saveMemoryStack(parseFloat(mainDisplayStack.join("")))
+			setIsCalculated(true)
 		},
 		history: () => {
-			setIsShowMemory(true)
+			setIsShowHistory(false)
+			setOpenMemoryHistoryPanel(true)
 		},
 	}
 
@@ -49,7 +96,11 @@ export default function MemoryButton(props: ButtonProps) {
 		isNoValueInMemoryStack && isClearRecallHistory
 	return (
 		<button
-			className="bg-transparent hover:bg-neutral-800 py-1 disabled:opacity-50"
+			title={titleMap[props.type]}
+			className={
+				props.styleOverride ??
+				"bg-transparent hover:bg-neutral-800 py-1 disabled:opacity-50"
+			}
 			onClick={() => handleMap[props.type]()}
 			disabled={
 				isCalculationError || isDisabledBecauseNoValueInMemoryStack

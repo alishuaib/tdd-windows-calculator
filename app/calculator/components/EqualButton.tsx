@@ -3,6 +3,7 @@
 import Button from "./Button"
 import { useDisplay } from "../context/DisplayContext"
 import { detectAdvancedOperation } from "./AdvancedOperatorButton"
+import { useEffect } from "react"
 
 export function processExpression(expression: string[]) {
 	type Operation = "+" | "-" | "×" | "÷"
@@ -46,6 +47,7 @@ export default function EqualButton() {
 		isCalculated,
 		setIsCalculated,
 		setLastUsedOperator,
+		addToHistory,
 	} = useDisplay()!
 
 	function handleEqualButtonClick(
@@ -71,7 +73,10 @@ export default function EqualButton() {
 			value,
 		])
 		setMainDisplayStack(() => [answer])
-
+		addToHistory(
+			[answer],
+			[...calculationDisplayStack, mainDisplayStack.join(""), value]
+		)
 		setIsCalculated(true)
 		setLastUsedOperator(false)
 	}

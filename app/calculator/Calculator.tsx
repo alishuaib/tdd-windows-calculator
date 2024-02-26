@@ -9,6 +9,7 @@ import ClearButton from "./components/ClearButton"
 import EqualButton from "./components/EqualButton"
 import MemoryButton from "./components/MemoryButton"
 import MemoryPanel from "./components/HistoryPanel"
+import { ClockCounterClockwise } from "@phosphor-icons/react"
 import { useDisplay } from "./context/DisplayContext"
 
 export default function Calculator() {
@@ -22,6 +23,9 @@ export default function Calculator() {
 		setCalculationStack,
 		setLastUsedOperator,
 		setIsCalculated,
+		historyStack,
+		setOpenMemoryHistoryPanel,
+		setIsShowHistory,
 	} = useDisplay()!
 
 	function handleDecimalButtonClick() {
@@ -77,7 +81,20 @@ export default function Calculator() {
 	}
 
 	return (
-		<div className="relative flex flex-col gap-4 bg-zinc-900 p-1 border-zinc-500 border">
+		<div className="relative flex flex-col gap-4 bg-zinc-900 p-1 border-zinc-500 border overflow-hidden">
+			<div className="flex text-2xl w-full justify-end pt-2 px-2">
+				<button
+					title="History (Ctrl+H)"
+					className="disabled:opacity-50"
+					disabled={historyStack.length > 0 ? false : true}
+					onClick={() => {
+						setOpenMemoryHistoryPanel(true)
+						setIsShowHistory(true)
+					}}
+				>
+					<ClockCounterClockwise color="#ffffff" />
+				</button>
+			</div>
 			<div
 				data-testid="calculationDisplay"
 				className="text-2xl text-zinc-700 text-right flex w-full justify-end gap-[2px] h-[1em]"
