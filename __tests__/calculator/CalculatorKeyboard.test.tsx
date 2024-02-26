@@ -21,7 +21,7 @@ describe("Keyboard input tests", () => {
 			}
 		)
 		const mainDisplay = screen.getByTestId("mainDisplay")
-		expect(mainDisplay.textContent).toBe("1234567890")
+		expect(mainDisplay.textContent).toBe("1,234,567,890")
 	})
 
 	it("Keyboard input +,-,/,* should insert operators to the display", () => {

@@ -24,6 +24,7 @@ body {
 			rgb(var(--background-end-rgb))
 		)
 		rgb(var(--background-start-rgb));
+	font-family: "Segoe UI", Arial, sans-serif;
 }
 
 @layer utilities {

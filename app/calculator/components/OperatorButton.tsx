@@ -60,18 +60,18 @@ export default function OperatorButton(props: {
 			].includes("$")
 		) {
 			if (calculationDisplayStack.length > 2) {
-				let answer: string
+				let answer: string[]
 				try {
 					answer = processExpression([
 						...calculationDisplayStack,
 						mainDisplayStack.join(""),
 					])
 				} catch (error) {
-					answer = "Error"
+					answer = ["Error"]
 					setIsCalculationError(true)
 				}
-				setMainDisplayStack(() => [answer])
-				setCalculationStack(() => [answer, value])
+				setMainDisplayStack([...answer])
+				setCalculationStack([...answer.slice(0, 16), value])
 			} else {
 				setCalculationStack(() => {
 					return [...calculationDisplayStack, value]
@@ -91,18 +91,18 @@ export default function OperatorButton(props: {
 		} else if (calculationDisplayStack.length > 0) {
 			// If there is already an expression in calculationDisplayStack, operate the display number and show result
 			// In both calculationDisplay and mainDisplay
-			let answer: string
+			let answer: string[]
 			try {
 				answer = processExpression([
 					...calculationDisplayStack,
 					mainDisplayStack.join(""),
 				])
 			} catch (error) {
-				answer = "Error"
+				answer = ["Error"]
 				setIsCalculationError(true)
 			}
-			setMainDisplayStack(() => [answer])
-			setCalculationStack(() => [answer, value])
+			setMainDisplayStack([...answer])
+			setCalculationStack([...answer.slice(0, 16), value])
 		} else {
 			// Add the joined mainDisplayStack numbers and clicked operator to the calculationDisplayStack
 			setCalculationStack(() => {

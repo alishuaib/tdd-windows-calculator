@@ -9,7 +9,7 @@ interface ButtonProps {
 
 export default function Button(props: ButtonProps) {
 	const { styleType = "operationKey", disabled = false } = props
-	const styleDefault = "px-6 py-3 rounded-sm disabled:opacity-50 text-xl"
+	const styleDefault = "px-6 py-3 rounded-sm disabled:opacity-50 text-lg"
 	const style = {
 		numberKey: "bg-neutral-700 hover:bg-neutral-800",
 		operationKey: "bg-neutral-800 hover:bg-neutral-700",

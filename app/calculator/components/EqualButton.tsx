@@ -33,7 +33,7 @@ export function processExpression(expression: string[]) {
 	if (expression[1] == "÷" && expression[2] == "0") {
 		throw new Error("ZeroDivisionError")
 	}
-	return result.toString()
+	return result.toString().split("")
 }
 
 export default function EqualButton() {
@@ -71,14 +71,14 @@ export default function EqualButton() {
 		if (isCalculated && calculationDisplayStack.includes("=")) {
 			return
 		}
-		let answer: string
+		let answer: string[]
 		try {
 			answer = processExpression([
 				...calculationDisplayStack,
 				mainDisplayStack.join(""),
 			])
 		} catch (error) {
-			answer = "Error"
+			answer = ["Error"]
 			setIsCalculationError(true)
 		}
 		if (
@@ -94,9 +94,9 @@ export default function EqualButton() {
 				value,
 			])
 		}
-		setMainDisplayStack(() => [answer])
+		setMainDisplayStack([...answer])
 		addToHistory(
-			[answer],
+			[...answer],
 			[...calculationDisplayStack, mainDisplayStack.join(""), value]
 		)
 		setIsCalculated(true)

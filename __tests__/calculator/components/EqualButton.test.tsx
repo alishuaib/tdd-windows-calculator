@@ -171,7 +171,7 @@ describe("Equals button tests [=]", () => {
 		})
 
 		expect(calculationDisplay.textContent).toBe("1÷19=")
-		expect(mainDisplay.textContent).toBe("0.05263157894736842")
+		expect(mainDisplay.textContent).toBe("0.0526315789473684")
 	})
 	it("(Division by zero) Equals button should display an error message if the expression is invalid", () => {
 		const mainDisplay = screen.getByTestId("mainDisplay")

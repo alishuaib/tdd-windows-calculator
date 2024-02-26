@@ -28,7 +28,7 @@ describe("Number Button Tests", () => {
 		})
 
 		// Check if the display value contains the concatenated numbers
-		expect(mainDisplay.textContent).toBe("1234567890")
+		expect(mainDisplay.textContent).toBe("1,234,567,890")
 	})
 
 	it("number buttons should not insert a leading zero to the display", () => {

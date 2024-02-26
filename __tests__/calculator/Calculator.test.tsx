@@ -290,28 +290,64 @@ describe("Calculator Widget", () => {
 		})
 	})
 
-	// Same as windows calculator key bindings
-	describe("Keyboard input tests", () => {
-		it.todo("Keyboard input +,-,/,* should insert operators to the display")
-		it.todo("Keyboard input . should insert decimal points to the display")
-		it.todo(
-			"Keyboard input backspace should trigger backspace to the display"
-		)
-		it.todo(
-			"Keyboard input = should calculate the expression and display the result"
-		)
-		it.todo("Keyboard input DELETE should clear the display")
-		it.todo(
-			"Keyboard input % should take the number in the display and convert it to a percentage calculation of the number in the calculation display"
-		)
-		it.todo(
-			"Keyboard input R should take the number in the display and calculate the reciprocal of the number then display the result"
-		)
-		it.todo(
-			"Keyboard input @ should take the number in the display and calculate the square root of the number then display the result"
-		)
-		it.todo(
-			"Keyboard input Q should take the number in the display and calculate the number squared then display the result"
-		)
+	describe("Display Character Limits", () => {
+		it("Number should be separated by commas after 3 digits", () => {
+			"1234567890".split("").forEach((i) => {
+				fireEvent.keyDown(window, { key: i })
+			})
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			expect(mainDisplay.textContent).toBe("1,234,567,890")
+		})
+
+		it("Decimal point should be displayed even if its the last character", () => {
+			"0.".split("").forEach((i) => {
+				fireEvent.keyDown(window, { key: i })
+			})
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			expect(mainDisplay.textContent).toBe("0.")
+			fireEvent.keyDown(window, { key: "Escape" })
+			"1111111111111111.".split("").forEach((i) => {
+				fireEvent.keyDown(window, { key: i })
+			})
+			expect(mainDisplay.textContent).toBe("1,111,111,111,111,111.")
+		})
+
+		it("'Error' should be displayed if calculation error occurs", () => {
+			fireEvent.keyDown(window, { key: "1" })
+			fireEvent.keyDown(window, { key: "/" })
+			fireEvent.keyDown(window, { key: "0" })
+			fireEvent.keyDown(window, { key: "=" })
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			expect(mainDisplay.textContent).toBe("Error")
+		})
+
+		it("Decimal limit should be 16 characters with 0. integer", () => {
+			"0.111111111111111122222222222".split("").forEach((i) => {
+				fireEvent.keyDown(window, { key: i })
+			})
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			expect(mainDisplay.textContent?.length).toEqual(18)
+		})
+		it("Decimal limit should be max 17 characters with 1. integer", () => {
+			"1.111111111111111222222".split("").forEach((i) => {
+				fireEvent.keyDown(window, { key: i })
+			})
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			expect(mainDisplay.textContent?.length).toEqual(17)
+		})
+		it("Display character limit should be 21 characters without decimal", () => {
+			"1111111111111111".split("").forEach((i) => {
+				fireEvent.keyDown(window, { key: i })
+			})
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			expect(mainDisplay.textContent?.length).toEqual(21)
+		})
+		it("Display character limit should be 21 characters with decimal", () => {
+			"1111111111111.11111".split("").forEach((i) => {
+				fireEvent.keyDown(window, { key: i })
+			})
+			const mainDisplay = screen.getByTestId("mainDisplay")
+			expect(mainDisplay.textContent?.length).toEqual(21)
+		})
 	})
 })

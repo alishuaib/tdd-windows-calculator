@@ -5,8 +5,11 @@ import React, { createContext, useState, useContext, useEffect } from "react"
 interface DisplayContextProps {
 	calculationDisplayStack: string[]
 	mainDisplayStack: string[]
+	mainDisplayFontSize: number
+	setMainDisplayFontSize: React.Dispatch<React.SetStateAction<number>>
 	setCalculationStack: React.Dispatch<React.SetStateAction<string[]>>
 	setMainDisplayStack: React.Dispatch<React.SetStateAction<string[]>>
+	mainDisplayString: string
 	lastUsedOperator: boolean
 	setLastUsedOperator: React.Dispatch<React.SetStateAction<boolean>>
 	isCalculationError: boolean
@@ -31,14 +34,17 @@ export default function DisplayProvider({
 		[]
 	)
 	const [mainDisplayStack, setMainDisplayStack] = useState(["0"])
+	const [mainDisplayString, setMainDisplayString] = useState("0")
 	const [historyStack, setHistoryStack] = useState<
 		{ main: string[]; calculation: string[] }[]
 	>([])
+	const [mainDisplayFontSize, setMainDisplayFontSize] = useState(1.8)
 	const [isShowHistory, setIsShowHistory] = useState(false)
 	const [openMemoryHistoryPanel, setOpenMemoryHistoryPanel] = useState(false)
 	const [lastUsedOperator, setLastUsedOperator] = useState(false)
 	const [isCalculationError, setIsCalculationError] = useState(false)
 	const [isCalculated, setIsCalculated] = useState(false)
+	const [lockNumberInput, setLockNumberInput] = useState(false)
 
 	function addToHistory(main: string[], calculation: string[]) {
 		setHistoryStack((prevValue) => {
@@ -53,13 +59,56 @@ export default function DisplayProvider({
 	function clearHistory() {
 		setHistoryStack([])
 	}
+
+	function formatMainDisplay(str: string) {
+		function sliceInteger(integer: string) {
+			return parseFloat(integer.slice(0, 16))
+		}
+		if (isCalculationError) return "Error"
+		if (str.charAt(str.length - 1) === ".")
+			return sliceInteger(str).toLocaleString().concat(".")
+		if (str.startsWith("0."))
+			return parseFloat(parseFloat(str).toFixed(16)).toString()
+		else if (str.includes(".")) {
+			let integer = sliceInteger(str.split(".")[0]).toLocaleString()
+			// 21 - 19 = 2
+			let decimal = parseFloat(
+				parseFloat(`0.${str.split(".")[1]}`).toFixed(
+					Math.min(15, 20 - integer.length)
+				)
+			)
+				.toString()
+				.split(".")[1]
+			return integer + "." + decimal
+		}
+		return sliceInteger(str).toLocaleString()
+	}
+
+	useEffect(() => {
+		//TODO: Limit items in mainDisplayStack to fit formatted string criteria
+		// Attempt reducing the number of items in the mainDisplayStack until difference in strings
+		let displayString = formatMainDisplay(mainDisplayStack.join("")) // To be compared with
+		console.log(
+			displayString.replaceAll(",", ""),
+			mainDisplayStack.join(""),
+			mainDisplayStack.join("") !== displayString.replace(",", "")
+		)
+		// if (mainDisplayStack.join("") !== displayString.replace(",", "")) {
+		// 	setMainDisplayStack([...displayString.split("")])
+		// }
+		setMainDisplayString(displayString)
+	}, [mainDisplayStack])
+
 	return (
 		<DisplayContext.Provider
 			value={{
 				calculationDisplayStack,
 				mainDisplayStack,
+				mainDisplayFontSize,
+				setMainDisplayFontSize,
 				setCalculationStack,
 				setMainDisplayStack,
+				mainDisplayString,
 				lastUsedOperator,
 				setLastUsedOperator,
 				isCalculationError,

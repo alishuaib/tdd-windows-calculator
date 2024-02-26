@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Button from "./components/Button"
 import OperatorButton from "./components/OperatorButton"
 import AdvancedOperatorButton from "./components/AdvancedOperatorButton"
@@ -15,6 +15,8 @@ import { useDisplay } from "./context/DisplayContext"
 export default function Calculator() {
 	const {
 		mainDisplayStack,
+		mainDisplayFontSize,
+		setMainDisplayFontSize,
 		calculationDisplayStack,
 		isCalculationError,
 		setMainDisplayStack,
@@ -26,6 +28,7 @@ export default function Calculator() {
 		historyStack,
 		setOpenMemoryHistoryPanel,
 		setIsShowHistory,
+		mainDisplayString,
 	} = useDisplay()!
 
 	useEffect(() => {
@@ -120,16 +123,38 @@ export default function Calculator() {
 		setIsCalculated(false)
 	}
 
+	const containerRef = useRef<HTMLParagraphElement>(null)
+	// useEffect(() => {
+	// 	if (containerRef.current !== null) {
+	// 		let isDisplayedContentOverflowingContainer =
+	// 			containerRef.current.scrollWidth >
+	// 			containerRef.current.clientWidth
+	// 		if (mainDisplayString.length <= 3) {
+	// 			setMainDisplayFontSize(2.8)
+	// 		} else if (isDisplayedContentOverflowingContainer) {
+	// 			// Decrease font size if content is too big
+	// 			setMainDisplayFontSize((prevValue) =>
+	// 				Math.max(prevValue - 0.2, 0)
+	// 			) // prevent font size from going below 0
+	// 		} else if (mainDisplayString.length < 18) {
+	// 			// Increase font size if content is too small
+	// 			setMainDisplayFontSize((prevValue) =>
+	// 				Math.min(prevValue + 0.2, 2.8)
+	// 			)
+	// 		}
+	// 	}
+	// }, [mainDisplayStack])
+
 	return (
-		<div className="relative flex flex-col gap-4 bg-zinc-900 p-1 border-zinc-500 border overflow-hidden">
-			<div className="flex justify-between pt-2 px-1">
+		<div className="relative flex flex-col gap-4 bg-zinc-900 p-1 border-zinc-500 border overflow-hidden h-[560px] w-[320px]">
+			<div className="flex items-center gap-2 pt-2 px-1">
 				<div className="cursor-pointer flex self-end items-center justify-center h-fit w-fit aspect-square text-2xl text-neutral-100 p-1 hover:bg-neutral-700 rounded-sm">
 					<button
 						title="Open Github Repository"
 						className="disabled:opacity-50"
 						onClick={() => {
 							open(
-								"https://github.com/alishuaib/orbite",
+								"https://github.com/alishuaib/tdd-windows-calculator",
 								"_blank"
 							)
 						}}
@@ -137,7 +162,8 @@ export default function Calculator() {
 						<GithubLogo color="#ffffff" />
 					</button>
 				</div>
-				<div className="cursor-pointer flex self-end items-center justify-center h-fit w-fit aspect-square text-2xl text-neutral-100 p-1 hover:bg-neutral-700 rounded-sm">
+				<p className="font-semibold text-xl">Standard</p>
+				<div className="ml-auto cursor-pointer flex self-end items-center justify-center h-fit w-fit aspect-square text-2xl text-neutral-100 p-1 hover:bg-neutral-700 rounded-sm">
 					<button
 						title="History (Ctrl+H)"
 						className="disabled:opacity-50"
@@ -153,7 +179,7 @@ export default function Calculator() {
 			</div>
 			<div
 				data-testid="calculationDisplay"
-				className="text-2xl text-zinc-700 text-right flex w-full justify-end gap-[2px] h-[1em]"
+				className="text-2xl text-zinc-700 text-right flex w-full justify-end gap-[2px] h-[1em] flex-1"
 			>
 				{calculationDisplayStack.map((v: string, i) => {
 					function format$(v: string) {
@@ -174,10 +200,12 @@ export default function Calculator() {
 				})}
 			</div>
 			<p
+				ref={containerRef}
 				data-testid="mainDisplay"
-				className="text-5xl text-right"
+				style={{ fontSize: `${mainDisplayFontSize}rem` }}
+				className="text-right font-semibold h-min-[2.8rem] overflow-x-clip w-[310px]"
 			>
-				{mainDisplayStack}
+				{mainDisplayString}
 			</p>
 			<div className="flex flex-col gap-1">
 				<div
