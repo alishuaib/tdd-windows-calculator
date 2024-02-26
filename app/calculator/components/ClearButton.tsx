@@ -2,6 +2,7 @@
 
 import Button from "./Button"
 import { useDisplay } from "../context/DisplayContext"
+import { useEffect } from "react"
 
 export default function ClearButton(props: {
 	type: "clear" | "clearEntry" | "backspace"
@@ -22,10 +23,26 @@ export default function ClearButton(props: {
 		backspace: "←",
 	}
 
-	function handleOperatorButtonClick(
-		event: React.MouseEvent<HTMLButtonElement>
-	) {
-		const value = (event.target as HTMLButtonElement).textContent as string
+	useEffect(() => {
+		const typeKeyMap = {
+			clear: "Escape",
+			clearEntry: "Delete",
+			backspace: "Backspace",
+		}
+		function handleKeyDown(event: KeyboardEvent) {
+			if (event.key === typeKeyMap[props.type]) {
+				event.preventDefault()
+				handleOperatorButtonClick()
+			}
+		}
+		window.addEventListener("keydown", handleKeyDown)
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown)
+		}
+	})
+
+	function handleOperatorButtonClick() {
+		const value = typeSymbolMap[props.type]
 
 		if (isCalculationError) {
 			setMainDisplayStack(() => ["0"])

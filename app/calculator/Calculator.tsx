@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Button from "./components/Button"
 import OperatorButton from "./components/OperatorButton"
 import AdvancedOperatorButton from "./components/AdvancedOperatorButton"
@@ -9,7 +9,7 @@ import ClearButton from "./components/ClearButton"
 import EqualButton from "./components/EqualButton"
 import MemoryButton from "./components/MemoryButton"
 import MemoryPanel from "./components/HistoryPanel"
-import { ClockCounterClockwise } from "@phosphor-icons/react"
+import { ClockCounterClockwise, GithubLogo } from "@phosphor-icons/react"
 import { useDisplay } from "./context/DisplayContext"
 
 export default function Calculator() {
@@ -27,6 +27,26 @@ export default function Calculator() {
 		setOpenMemoryHistoryPanel,
 		setIsShowHistory,
 	} = useDisplay()!
+
+	useEffect(() => {
+		function handleKeyDown(event: KeyboardEvent) {
+			switch (event.key) {
+				case ".":
+					handleDecimalButtonClick()
+					break
+				case "f9":
+					handleSignChangeButtonClick()
+					break
+				case "%":
+					handlePercentageButtonClick()
+					break
+			}
+		}
+		window.addEventListener("keydown", handleKeyDown)
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown)
+		}
+	})
 
 	function handleDecimalButtonClick() {
 		setMainDisplayStack((prevValue) => {
@@ -82,18 +102,34 @@ export default function Calculator() {
 
 	return (
 		<div className="relative flex flex-col gap-4 bg-zinc-900 p-1 border-zinc-500 border overflow-hidden">
-			<div className="flex text-2xl w-full justify-end pt-2 px-2">
-				<button
-					title="History (Ctrl+H)"
-					className="disabled:opacity-50"
-					disabled={historyStack.length > 0 ? false : true}
-					onClick={() => {
-						setOpenMemoryHistoryPanel(true)
-						setIsShowHistory(true)
-					}}
-				>
-					<ClockCounterClockwise color="#ffffff" />
-				</button>
+			<div className="flex justify-between pt-2 px-1">
+				<div className="cursor-pointer flex self-end items-center justify-center h-fit w-fit aspect-square text-2xl text-neutral-100 p-1 hover:bg-neutral-700 rounded-sm">
+					<button
+						title="Open Github Repository"
+						className="disabled:opacity-50"
+						onClick={() => {
+							open(
+								"https://github.com/alishuaib/orbite",
+								"_blank"
+							)
+						}}
+					>
+						<GithubLogo color="#ffffff" />
+					</button>
+				</div>
+				<div className="cursor-pointer flex self-end items-center justify-center h-fit w-fit aspect-square text-2xl text-neutral-100 p-1 hover:bg-neutral-700 rounded-sm">
+					<button
+						title="History (Ctrl+H)"
+						className="disabled:opacity-50"
+						disabled={historyStack.length > 0 ? false : true}
+						onClick={() => {
+							setOpenMemoryHistoryPanel(true)
+							setIsShowHistory(true)
+						}}
+					>
+						<ClockCounterClockwise color="#ffffff" />
+					</button>
+				</div>
 			</div>
 			<div
 				data-testid="calculationDisplay"

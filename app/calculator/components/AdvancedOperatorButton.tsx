@@ -3,7 +3,7 @@
 import Button from "./Button"
 import { useDisplay } from "../context/DisplayContext"
 import { processExpression } from "./EqualButton"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 type AdvancedOperation = "reciprocal" | "squareroot" | "square"
 
@@ -55,9 +55,9 @@ const processAdvancedExpression = {
 export function detectAdvancedOperation(a: string) {
 	if (a.includes("1/")) {
 		return processReciprocal(a)
-	} else if (a.includes("²√")) {
+	} else if (a.includes("√")) {
 		return processSquareroot(a)
-	} else if (a.includes("²")) {
+	} else if (a.includes("sqr")) {
 		return processSquare(a)
 	}
 	return a
@@ -85,10 +85,32 @@ export default function AdvancedOperatorButton(props: {
 		square: "x²",
 	}
 
-	function handleOperatorButtonClick(
-		event: React.MouseEvent<HTMLButtonElement>
-	) {
-		const value = (event.target as HTMLButtonElement).textContent as string
+	const operatorValueMap = {
+		reciprocal: "1/x",
+		squareroot: "√x",
+		square: "sqrx",
+	}
+
+	useEffect(() => {
+		const operatorKeyMap = {
+			reciprocal: "R",
+			squareroot: "@",
+			square: "Q",
+		}
+		function handleKeyDown(event: KeyboardEvent) {
+			if (event.key === operatorKeyMap[props.operator]) {
+				event.preventDefault()
+				handleOperatorButtonClick()
+			}
+		}
+		window.addEventListener("keydown", handleKeyDown)
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown)
+		}
+	})
+
+	function handleOperatorButtonClick() {
+		const value = operatorValueMap[props.operator]
 
 		let expression: string
 		if (lastUsedOperator) {

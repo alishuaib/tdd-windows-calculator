@@ -50,10 +50,21 @@ export default function EqualButton() {
 		addToHistory,
 	} = useDisplay()!
 
-	function handleEqualButtonClick(
-		event: React.MouseEvent<HTMLButtonElement>
-	) {
-		const value = (event.target as HTMLButtonElement).textContent as string
+	useEffect(() => {
+		function handleKeyDown(event: KeyboardEvent) {
+			if (event.key === "=" || event.key === "Enter") {
+				event.preventDefault()
+				handleEqualButtonClick()
+			}
+		}
+		window.addEventListener("keydown", handleKeyDown)
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown)
+		}
+	})
+
+	function handleEqualButtonClick() {
+		const value = "="
 		if (isCalculated && calculationDisplayStack.includes("=")) {
 			return
 		}

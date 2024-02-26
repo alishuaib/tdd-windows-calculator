@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom"
-import { render, screen } from "@testing-library/react"
+import { fireEvent, render, screen } from "@testing-library/react"
 import Calculator from "@/app/calculator/Calculator"
 import ContextManager from "@/app/calculator/context/ContextManager"
 import { act } from "react-dom/test-utils"
@@ -290,15 +290,8 @@ describe("Calculator Widget", () => {
 		})
 	})
 
-	describe("Github button test", () => {
-		it.todo(
-			"Github button should open a new tab with the github repository"
-		)
-	})
-
 	// Same as windows calculator key bindings
 	describe("Keyboard input tests", () => {
-		it.todo("Keyboard input 0-9 should insert numbers to the display")
 		it.todo("Keyboard input +,-,/,* should insert operators to the display")
 		it.todo("Keyboard input . should insert decimal points to the display")
 		it.todo(

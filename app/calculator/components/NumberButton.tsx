@@ -2,6 +2,7 @@
 
 import Button from "./Button"
 import { useDisplay } from "../context/DisplayContext"
+import { useEffect } from "react"
 
 export default function NumberButton(props: {
 	number: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "0"
@@ -16,10 +17,21 @@ export default function NumberButton(props: {
 		setIsCalculated,
 	} = useDisplay()!
 
-	function handleNumberButtonClick(
-		event: React.MouseEvent<HTMLButtonElement>
-	) {
-		const value = (event.target as HTMLButtonElement).textContent as string
+	useEffect(() => {
+		function handleKeyDown(event: KeyboardEvent) {
+			if (event.key === props.number) {
+				event.preventDefault()
+				handleNumberButtonClick()
+			}
+		}
+		window.addEventListener("keydown", handleKeyDown)
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown)
+		}
+	})
+
+	function handleNumberButtonClick() {
+		let value = props.number
 		if (isCalculated) {
 			setMainDisplayStack([value])
 			setCalculationStack([])

@@ -3,16 +3,10 @@
 import Button from "./Button"
 import { useDisplay } from "../context/DisplayContext"
 import { processExpression } from "./EqualButton"
+import { useEffect } from "react"
 
 export default function OperatorButton(props: {
-	operator:
-		| "add"
-		| "subtract"
-		| "multiply"
-		| "divide"
-		| "reciprocal"
-		| "squareroot"
-		| "square"
+	operator: "add" | "subtract" | "multiply" | "divide"
 }) {
 	const {
 		mainDisplayStack,
@@ -32,15 +26,29 @@ export default function OperatorButton(props: {
 		subtract: "-",
 		multiply: "×",
 		divide: "÷",
-		reciprocal: "1/x",
-		squareroot: "²√x",
-		square: "x²",
 	}
 
-	function handleOperatorButtonClick(
-		event: React.MouseEvent<HTMLButtonElement>
-	) {
-		const value = (event.target as HTMLButtonElement).textContent as string
+	useEffect(() => {
+		const operatorKeyMap = {
+			add: "+",
+			subtract: "-",
+			multiply: "*",
+			divide: "/",
+		}
+		function handleKeyDown(event: KeyboardEvent) {
+			if (event.key === operatorKeyMap[props.operator]) {
+				event.preventDefault()
+				handleOperatorButtonClick()
+			}
+		}
+		window.addEventListener("keydown", handleKeyDown)
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown)
+		}
+	})
+
+	function handleOperatorButtonClick() {
+		const value = operatorSymbolMap[props.operator]
 
 		if (
 			calculationDisplayStack.length > 0 &&
