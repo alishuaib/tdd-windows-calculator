@@ -85,17 +85,13 @@ export default function DisplayProvider({
 	}
 
 	useEffect(() => {
-		//TODO: Limit items in mainDisplayStack to fit formatted string criteria
-		// Attempt reducing the number of items in the mainDisplayStack until difference in strings
-		let displayString = formatMainDisplay(mainDisplayStack.join("")) // To be compared with
-		console.log(
-			displayString.replaceAll(",", ""),
-			mainDisplayStack.join(""),
-			mainDisplayStack.join("") !== displayString.replace(",", "")
-		)
-		// if (mainDisplayStack.join("") !== displayString.replace(",", "")) {
-		// 	setMainDisplayStack([...displayString.split("")])
-		// }
+		//Limit items in mainDisplayStack to fit formatted string criteria
+		let displayString = formatMainDisplay(mainDisplayStack.join(""))
+		if (mainDisplayStack.join("") !== displayString.replaceAll(",", "")) {
+			setMainDisplayStack([
+				...displayString.replaceAll(",", "").split(""),
+			])
+		}
 		setMainDisplayString(displayString)
 	}, [mainDisplayStack])
 
