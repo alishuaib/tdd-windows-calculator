@@ -38,7 +38,7 @@ export default function DisplayProvider({
 	const [historyStack, setHistoryStack] = useState<
 		{ main: string[]; calculation: string[] }[]
 	>([])
-	const [mainDisplayFontSize, setMainDisplayFontSize] = useState(1.8)
+	const [mainDisplayFontSize, setMainDisplayFontSize] = useState(2.8)
 	const [isShowHistory, setIsShowHistory] = useState(false)
 	const [openMemoryHistoryPanel, setOpenMemoryHistoryPanel] = useState(false)
 	const [lastUsedOperator, setLastUsedOperator] = useState(false)

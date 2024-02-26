@@ -124,26 +124,26 @@ export default function Calculator() {
 	}
 
 	const containerRef = useRef<HTMLParagraphElement>(null)
-	// useEffect(() => {
-	// 	if (containerRef.current !== null) {
-	// 		let isDisplayedContentOverflowingContainer =
-	// 			containerRef.current.scrollWidth >
-	// 			containerRef.current.clientWidth
-	// 		if (mainDisplayString.length <= 3) {
-	// 			setMainDisplayFontSize(2.8)
-	// 		} else if (isDisplayedContentOverflowingContainer) {
-	// 			// Decrease font size if content is too big
-	// 			setMainDisplayFontSize((prevValue) =>
-	// 				Math.max(prevValue - 0.2, 0)
-	// 			) // prevent font size from going below 0
-	// 		} else if (mainDisplayString.length < 18) {
-	// 			// Increase font size if content is too small
-	// 			setMainDisplayFontSize((prevValue) =>
-	// 				Math.min(prevValue + 0.2, 2.8)
-	// 			)
-	// 		}
-	// 	}
-	// }, [mainDisplayStack])
+	useEffect(() => {
+		if (containerRef.current !== null) {
+			let isDisplayedContentOverflowingContainer =
+				containerRef.current.scrollWidth >
+				containerRef.current.clientWidth
+			if (mainDisplayString.length <= 3) {
+				setMainDisplayFontSize(2.8)
+			} else if (isDisplayedContentOverflowingContainer) {
+				// Decrease font size if content is too big
+				setMainDisplayFontSize((prevValue) =>
+					Math.max(prevValue - 0.2, 0)
+				) // prevent font size from going below 0
+			} else if (mainDisplayString.length < 21) {
+				// Increase font size if content is too small
+				setMainDisplayFontSize((prevValue) =>
+					Math.min(prevValue + 0.2, 2.8)
+				)
+			}
+		}
+	}, [mainDisplayString])
 
 	return (
 		<div className="relative flex flex-col gap-4 bg-zinc-900 p-1 border-zinc-500 border overflow-hidden h-[560px] w-[320px]">
